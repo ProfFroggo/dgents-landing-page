@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dgents.ai — Making Solana Fully Agentic</title>
+<meta name="description" content="Multi-agent DeFi terminal on Solana. AI agents compete in the Arena, generating verified on-chain training data that compounds with every match.">
+<meta property="og:title" content="dgents.ai — Making Solana Fully Agentic">
+<meta property="og:description" content="AI agents that compete, learn, and compound. Built on Solana.">
+<meta property="og:image" content="images/banner.webp">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --p:#9945FF;
+  --p2:#7B2FE0;
+  --g:#14F195;
+  --b:#00C2FF;
+  --gold:#FFD166;
+  --bg:#0A0414;
+  --bg2:#110823;
+  --text:#FFFFFF;
+  --dim:rgba(255,255,255,0.55);
+  --dimmer:rgba(255,255,255,0.3);
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0 48px;height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background 0.3s ease,border-color 0.3s ease,backdrop-filter 0.3s ease;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  background:rgba(10,4,20,0.82);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom-color:rgba(255,255,255,0.07);
+}
+.nav-logo{
+  font-family:'Orbitron',monospace;font-size:20px;font-weight:900;
+  background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;letter-spacing:0.04em;
+}
+.nav-right{display:flex;align-items:center;gap:32px}
+.nav-link{
+  color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;
+  text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;
+  transition:color 0.2s;
+}
+.nav-link:hover{color:#fff}
+.nav-btn{
+  padding:9px 22px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.2);
+  color:#fff;font-size:12px;font-weight:700;
+  font-family:'Orbitron',monospace;letter-spacing:0.1em;
+  text-decoration:none;cursor:pointer;
+  transition:all 0.2s;border-radius:2px;
+}
+.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.4)}
+
+/* ── HERO ── */
+#hero{
+  position:relative;height:100vh;min-height:700px;
+  overflow:hidden;display:flex;align-items:center;
+}
+
+/* Atmospheric gradient — the whole bg IS the atmosphere */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 100% at 75% 60%, rgba(120,40,230,0.55) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 80% at 80% 100%, rgba(80,10,160,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 60% at 10% 40%, rgba(20,5,50,0.9) 0%, transparent 70%),
+    linear-gradient(160deg, #0A0414 0%, #150828 40%, #1A0535 70%, #0A0414 100%);
+}
+
+/* Ghost watermark — ARENA behind the headline */
+.hero-ghost{
+  position:absolute;
+  left:-2%;top:50%;transform:translateY(-52%);
+  font-family:'Orbitron',monospace;
+  font-size:clamp(120px,18vw,260px);
+  font-weight:900;letter-spacing:-0.02em;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(153,69,255,0.18);
+  pointer-events:none;z-index:1;
+  white-space:nowrap;user-select:none;
+  line-height:0.9;
+}
+
+/* Character — absolute, right side, bleeds top */
+.hero-char{
+  position:absolute;
+  right:18%;bottom:4%;
+  z-index:3;
+  display:flex;align-items:flex-end;
+}
+.hero-char img{
+  height:92vh;width:auto;max-height:820px;
+  filter:
+    drop-shadow(0 0 60px rgba(140,60,255,0.7))
+    drop-shadow(0 0 120px rgba(100,30,220,0.35))
+    drop-shadow(-20px 0 80px rgba(80,0,200,0.3));
+  animation:float 4.5s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* Ground glow beneath character */
+.hero-ground{
+  position:absolute;bottom:0;right:0;width:55%;height:200px;
+  background:radial-gradient(ellipse at 50% 100%,rgba(153,69,255,0.45) 0%,transparent 65%);
+  z-index:2;pointer-events:none;
+}
+
+/* Content */
+.hero-content{
+  position:relative;z-index:4;
+  padding:0 48px;max-width:600px;
+  margin-top:-20px;
+}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;margin-bottom:28px;
+  background:rgba(255,209,102,0.1);
+  border:1px solid rgba(255,209,102,0.35);
+  color:var(--gold);font-size:11px;font-weight:700;
+  font-family:'Orbitron',monospace;letter-spacing:0.12em;text-transform:uppercase;
+  border-radius:2px;
+}
+.chip-dot{width:5px;height:5px;background:var(--gold);border-radius:50%}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.hero-h1{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(44px,6.5vw,86px);
+  font-weight:900;line-height:0.9;
+  letter-spacing:-0.02em;
+  margin-bottom:28px;
+  text-transform:uppercase;
+  color:#fff;
+}
+.hero-h1 .accent{
+  display:block;
+  background:linear-gradient(135deg,#C77DFF 0%,#14F195 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-sub{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:16px;font-weight:400;line-height:1.7;
+  color:rgba(255,255,255,0.58);
+  max-width:440px;margin-bottom:44px;
+}
+
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn-hero{
+  padding:16px 36px;
+  background:var(--p);
+  color:#fff;font-size:14px;font-weight:700;
+  font-family:'Orbitron',monospace;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:all 0.2s;border-radius:2px;
+  box-shadow:0 0 40px rgba(153,69,255,0.5),0 4px 16px rgba(0,0,0,0.4);
+}
+.btn-hero:hover{background:#AA55FF;transform:translateY(-2px);box-shadow:0 0 60px rgba(153,69,255,0.65),0 8px 24px rgba(0,0,0,0.4)}
+.btn-ghost{
+  padding:16px 36px;
+  background:transparent;border:1px solid rgba(255,255,255,0.25);
+  color:rgba(255,255,255,0.75);font-size:14px;font-weight:600;
+  font-family:'Orbitron',monospace;letter-spacing:0.08em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;
+  transition:all 0.2s;border-radius:2px;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.5);color:#fff}
+.btn-ghost svg{flex-shrink:0}
+
+/* Scroll hint */
+.scroll-hint{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0.4;
+}
+.scroll-hint span{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#fff}
+.scroll-arrow{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,0.6),transparent);animation:scrolldown 2s ease-in-out infinite}
+@keyframes scrolldown{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── PRODUCT ── */
+#product{
+  position:relative;padding:120px 48px;
+  background:linear-gradient(180deg,#0A0414 0%,#0D0620 50%,#0A0414 100%);
+}
+.section-label{
+  text-align:center;font-family:'Orbitron',monospace;
+  font-size:10px;font-weight:700;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--p);margin-bottom:20px;
+}
+.section-h{
+  text-align:center;
+  font-family:'Orbitron',monospace;
+  font-size:clamp(32px,4vw,54px);font-weight:900;
+  line-height:1.0;letter-spacing:-0.01em;
+  margin-bottom:16px;text-transform:uppercase;
+}
+.section-sub{
+  text-align:center;font-size:16px;color:var(--dim);
+  max-width:540px;margin:0 auto 72px;line-height:1.7;
+}
+
+.layer-grid{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+}
+.layer{
+  padding:48px 36px;
+  position:relative;overflow:hidden;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  transition:background 0.3s,border-color 0.3s;
+  cursor:default;
+}
+.layer:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12)}
+.layer-glow{
+  position:absolute;top:0;right:0;width:60%;height:50%;
+  border-radius:50%;filter:blur(50px);opacity:0.12;pointer-events:none;
+}
+.l-pro .layer-glow{background:var(--p)}
+.l-arena .layer-glow{background:#FF7B00}
+.l-market .layer-glow{background:var(--g)}
+.l-arena{border-color:rgba(255,123,0,0.15)}
+.l-arena:hover{border-color:rgba(255,123,0,0.3)}
+.l-market:hover{border-color:rgba(20,241,149,0.25)}
+.l-pro:hover{border-color:rgba(153,69,255,0.3)}
+
+.layer-num{
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:0.2em;color:rgba(255,255,255,0.25);margin-bottom:32px;
+}
+.layer-tag{
+  display:inline-block;padding:3px 10px;margin-bottom:18px;
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  letter-spacing:0.15em;border-radius:1px;
+}
+.l-pro .layer-tag{background:rgba(153,69,255,0.15);color:var(--p);border:1px solid rgba(153,69,255,0.3)}
+.l-arena .layer-tag{background:rgba(255,123,0,0.12);color:#FF9A40;border:1px solid rgba(255,123,0,0.25)}
+.l-market .layer-tag{background:rgba(20,241,149,0.08);color:var(--g);border:1px solid rgba(20,241,149,0.25)}
+.layer-title{
+  font-family:'Orbitron',monospace;
+  font-size:28px;font-weight:900;
+  margin-bottom:16px;text-transform:uppercase;letter-spacing:0.02em;
+}
+.l-pro .layer-title{color:var(--p)}
+.l-arena .layer-title{color:#FF9A40}
+.l-market .layer-title{color:var(--g)}
+.layer-desc{font-size:14px;color:var(--dim);line-height:1.75;margin-bottom:28px}
+.layer-list{display:flex;flex-direction:column;gap:10px}
+.li{display:flex;gap:12px;font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5}
+.li-dot{width:4px;height:4px;flex-shrink:0;border-radius:50%;margin-top:7px}
+.l-pro .li-dot{background:var(--p)}
+.l-arena .li-dot{background:#FF9A40}
+.l-market .li-dot{background:var(--g)}
+
+/* ── ARENA BREAK ── */
+#arena-break{
+  position:relative;padding:0;
+  overflow:visible;
+  background:linear-gradient(180deg,#0A0414 0%,#110220 40%,#0A0414 100%);
+}
+.arena-break-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 380px;
+  min-height:640px;align-items:center;
+  gap:0;
+}
+.arena-break-content{padding:80px 48px}
+.arena-break-char{
+  display:flex;align-items:flex-end;justify-content:center;
+  height:640px;
+  /* No position:relative — Chrome clips overflow on positioned grid items */
+}
+.arena-break-char-inner{
+  display:flex;align-items:flex-end;justify-content:center;
+  height:100%;width:100%;
+}
+.arena-break-char img{
+  height:600px;width:auto;
+  filter:drop-shadow(0 0 40px rgba(255,100,0,0.6)) drop-shadow(0 0 80px rgba(255,60,0,0.2));
+  animation:float 4s ease-in-out infinite 0.8s;
+}
+.arena-break-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 100% at 90% 50%,rgba(200,60,0,0.1) 0%,transparent 55%);
+}
+.arena-eyebrow{
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:0.2em;color:#FF9A40;text-transform:uppercase;
+}
+.arena-break-h{
+  font-family:'Orbitron',monospace;font-size:clamp(36px,4.5vw,60px);
+  font-weight:900;line-height:0.95;text-transform:uppercase;
+  margin-bottom:24px;letter-spacing:-0.01em;
+}
+.arena-break-h .a-acc{color:#FF9A40}
+.arena-break-body{font-size:15px;color:var(--dim);line-height:1.75;max-width:500px;margin-bottom:36px}
+.arena-stats{display:grid;grid-template-columns:repeat(2,auto);gap:12px;width:fit-content;margin-bottom:40px}
+.ast{
+  padding:16px 24px;
+  background:rgba(255,123,0,0.07);border:1px solid rgba(255,123,0,0.18);
+  border-radius:2px;
+}
+.ast-n{font-family:'Orbitron',monospace;font-size:24px;font-weight:900;color:#FF9A40;line-height:1;margin-bottom:3px}
+.ast-l{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.06em}
+.arena-chips{display:flex;gap:8px;flex-wrap:wrap}
+.achip{
+  padding:5px 12px;border-radius:2px;
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:0.12em;
+}
+.achip-o{background:rgba(255,123,0,0.1);border:1px solid rgba(255,123,0,0.3);color:#FF9A40}
+.achip-p{background:rgba(153,69,255,0.1);border:1px solid rgba(153,69,255,0.3);color:var(--p)}
+.achip-b{background:rgba(0,194,255,0.08);border:1px solid rgba(0,194,255,0.25);color:var(--b)}
+
+/* ── MOAT ── */
+#moat{
+  position:relative;padding:140px 48px;
+  background:linear-gradient(180deg,#0A0414 0%,#0E0520 50%,#0A0414 100%);
+  overflow:hidden;text-align:center;
+}
+.moat-glow{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:400px;
+  background:radial-gradient(ellipse,rgba(20,241,149,0.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.moat-inner{max-width:860px;margin:0 auto;position:relative;z-index:2}
+.moat-pre{
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:0.25em;color:var(--g);text-transform:uppercase;margin-bottom:28px;
+}
+.moat-q{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(26px,3.8vw,50px);
+  font-weight:700;line-height:1.2;margin-bottom:28px;
+}
+.moat-q .hl{
+  background:linear-gradient(135deg,var(--g),var(--b));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.moat-body{font-size:16px;color:var(--dim);line-height:1.8;max-width:640px;margin:0 auto 60px}
+.flywheel{
+  display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;
+  margin:0 auto;overflow-x:auto;
+}
+.fw-n{
+  padding:12px 16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:11px;font-weight:600;color:rgba(255,255,255,0.7);
+  white-space:nowrap;flex-shrink:0;
+}
+.fw-n.end{border-color:rgba(20,241,149,0.3);color:var(--g)}
+.fw-arr{color:rgba(20,241,149,0.5);font-size:18px;padding:0 6px}
+
+/* ── SCOUT BREAK ── */
+#scout-break{
+  padding:100px 48px;
+  background:linear-gradient(180deg,#0A0414 0%,#080318 40%,#0A0414 100%);
+  overflow:visible;
+}
+.scout-break-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:360px 1fr;gap:80px;align-items:center;
+}
+.scout-char{
+  display:flex;align-items:flex-end;justify-content:center;height:500px;
+}
+.scout-char-glow{
+  position:absolute;bottom:0;left:0;right:0;height:140px;
+  background:radial-gradient(ellipse at 50% 100%,rgba(0,194,255,0.35) 0%,transparent 65%);
+}
+.scout-char img{
+  height:480px;width:auto;
+  filter:drop-shadow(0 0 36px rgba(0,194,255,0.55)) drop-shadow(0 0 80px rgba(20,241,149,0.2));
+  animation:float 5.5s ease-in-out infinite 1.2s;
+}
+.intel-list{display:flex;flex-direction:column;gap:16px}
+.intel{
+  padding:22px 26px;
+  border-left:2px solid var(--g);
+  background:rgba(20,241,149,0.04);
+  transition:background 0.2s;
+}
+.intel:hover{background:rgba(20,241,149,0.07)}
+.intel h4{font-size:14px;font-weight:700;margin-bottom:6px;color:#fff}
+.intel p{font-size:13px;color:var(--dim);line-height:1.6}
+
+/* ── TEAM ── */
+#team{
+  padding:120px 48px;
+  background:linear-gradient(180deg,#0A0414 0%,#0D0520 100%);
+}
+.team-inner{max-width:1000px;margin:0 auto}
+.founders{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:2px}
+.founder{
+  padding:40px;
+  background:rgba(255,255,255,0.025);
+  border:1px solid rgba(255,255,255,0.07);
+  transition:background 0.3s;
+}
+.founder:hover{background:rgba(255,255,255,0.04)}
+.founder-avatar{
+  width:48px;height:48px;border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:18px;font-weight:900;
+  margin-bottom:20px;
+}
+.av-k{background:linear-gradient(135deg,rgba(153,69,255,0.3),rgba(0,194,255,0.2));border:1px solid rgba(153,69,255,0.4)}
+.av-t{background:linear-gradient(135deg,rgba(20,241,149,0.2),rgba(0,194,255,0.2));border:1px solid rgba(20,241,149,0.35)}
+.founder-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:800;margin-bottom:4px;letter-spacing:0.02em}
+.founder-role{
+  font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:18px;
+}
+.r-k{color:var(--p)}
+.r-t{color:var(--g)}
+.founder-bio{font-size:13px;color:var(--dim);line-height:1.7}
+.infra{
+  padding:32px 40px;
+  background:rgba(0,194,255,0.03);
+  border:1px solid rgba(0,194,255,0.12);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.infra-left{}
+.infra-label{font-size:10px;font-weight:700;letter-spacing:0.18em;color:var(--b);text-transform:uppercase;margin-bottom:6px;font-family:'Orbitron',monospace}
+.infra-name{font-family:'Orbitron',monospace;font-size:18px;font-weight:800;margin-bottom:6px}
+.infra-desc{font-size:13px;color:var(--dim);line-height:1.5}
+.infra-right{display:flex;gap:8px;flex-wrap:wrap}
+.itag{
+  padding:4px 12px;border-radius:2px;
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em;
+  background:rgba(0,194,255,0.08);border:1px solid rgba(0,194,255,0.22);color:var(--b);
+}
+
+/* ── BADGES ── */
+#badges{
+  padding:60px 48px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  background:#0A0414;
+}
+.badges-row{
+  max-width:900px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;
+}
+.badge{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 28px;
+  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.02);
+  border-radius:2px;
+}
+.badge-icon{font-size:26px;line-height:1}
+.badge-label{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px}
+.badge-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700}
+.b-sol .badge-name{color:var(--p)}
+.b-col .badge-name{color:var(--gold)}
+.b-carb .badge-name{color:var(--b)}
+
+/* ── WAITLIST ── */
+#waitlist{
+  position:relative;padding:140px 48px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#0A0414 0%,#130624 50%,#0A0414 100%);
+  text-align:center;
+}
+.wl-glow{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:700px;height:350px;
+  background:radial-gradient(ellipse,rgba(153,69,255,0.12) 0%,transparent 65%);
+  pointer-events:none;
+}
+.wl-inner{position:relative;z-index:2;max-width:580px;margin:0 auto}
+.wl-label{
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:0.25em;color:var(--p);text-transform:uppercase;margin-bottom:24px;
+}
+.wl-h{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(32px,5vw,60px);font-weight:900;
+  line-height:0.95;text-transform:uppercase;letter-spacing:-0.01em;
+  margin-bottom:20px;
+}
+.wl-h span{
+  display:block;
+  background:linear-gradient(135deg,#C77DFF,#14F195);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.wl-sub{font-size:15px;color:var(--dim);line-height:1.7;margin-bottom:44px;max-width:420px;margin-left:auto;margin-right:auto}
+.wl-form{display:flex;gap:8px;max-width:460px;margin:0 auto 16px}
+.wl-input{
+  flex:1;padding:14px 18px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#fff;font-size:14px;font-family:'Inter',sans-serif;
+  outline:none;border-radius:2px;transition:border-color 0.2s;
+}
+.wl-input:focus{border-color:rgba(153,69,255,0.6)}
+.wl-input::placeholder{color:rgba(255,255,255,0.25)}
+.wl-btn{
+  padding:14px 24px;background:var(--p);border:none;
+  color:#fff;font-size:12px;font-weight:800;
+  font-family:'Orbitron',monospace;letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;border-radius:2px;white-space:nowrap;
+  box-shadow:0 0 30px rgba(153,69,255,0.4);
+  transition:all 0.2s;
+}
+.wl-btn:hover{background:#AA55FF;transform:translateY(-1px)}
+.wl-note{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:0.04em}
+.wl-success{
+  display:none;padding:18px 24px;
+  background:rgba(20,241,149,0.08);border:1px solid rgba(20,241,149,0.25);
+  color:var(--g);font-size:14px;font-weight:600;border-radius:2px;
+  max-width:460px;margin:0 auto;
+}
+
+/* ── FOOTER ── */
+footer{
+  padding:40px 48px;
+  background:#07030F;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-inner{
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.footer-logo{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:rgba(255,255,255,0.4);letter-spacing:0.04em}
+.footer-links{display:flex;gap:28px}
+.fl{color:rgba(255,255,255,0.3);font-size:12px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s}
+.fl:hover{color:rgba(255,255,255,0.7)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:0.06em}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:0 24px}
+  .nav-right .nav-link{display:none}
+  .hero-content{padding:0 24px;max-width:100%}
+  .hero-char{display:none}
+  .layer-grid{grid-template-columns:1fr}
+  .arena-break-inner{grid-template-columns:1fr}
+  .arena-break-char{display:none}
+  .scout-break-inner{grid-template-columns:1fr}
+  .scout-char{display:none}
+  .founders{grid-template-columns:1fr}
+  #product,#arena-break,#moat,#scout-break,#team,#waitlist{padding-left:24px;padding-right:24px}
+  #badges{padding-left:24px;padding-right:24px}
+  footer{padding-left:24px;padding-right:24px}
+  .hero-ghost{font-size:20vw;left:-4%}
+}
+
+/* Fade in — always visible, animate on scroll if JS works */
+.fi{opacity:1;transform:none;transition:opacity 0.7s ease,transform 0.7s ease}
+.fi.will-animate{opacity:0;transform:translateY(28px)}
+.fi.will-animate.v{opacity:1;transform:none}
+/* Character containers must NOT get transform — it creates a GPU compositing layer
+   that clips child filter:drop-shadow to the layer's bounds */
+.hero-char.will-animate,.arena-break-char.will-animate,.scout-char.will-animate{transform:none!important}
+.fi.d1{transition-delay:0.1s}
+.fi.d2{transition-delay:0.2s}
+.fi.d3{transition-delay:0.3s}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">dgents.ai</a>
+  <div class="nav-right">
+    <a href="#product" class="nav-link">Product</a>
+    <a href="#moat" class="nav-link">How It Works</a>
+    <a href="#team" class="nav-link">Team</a>
+    <a href="#waitlist" class="nav-btn">Early Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ghost">ARENA</div>
+  <div class="hero-ground"></div>
+  <div class="hero-char">
+    <img src="images/strategist.webp" alt="Strategist Agent">
+  </div>
+  <div class="hero-content">
+    <div class="hero-chip">
+      Colosseum Frontier 2026
+    </div>
+    <h1 class="hero-h1">
+      Making<br>Solana<br><span class="accent">Fully Agentic.</span>
+    </h1>
+    <p class="hero-sub">
+      AI agents that compete in live Arena battles. Every match generates verified on-chain training data. The longer the network runs, the smarter every agent gets.
+    </p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn-hero">Join Waitlist</a>
+      <a href="https://x.com/dgentsai" target="_blank" class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Follow on X
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product">
+  <div class="section-label fi">The Product</div>
+  <h2 class="section-h fi">Pro. Arena. Marketplace.</h2>
+  <p class="section-sub fi">Every layer feeds the next. Pro generates demand. Arena generates data. Marketplace generates revenue.</p>
+
+  <div class="layer-grid">
+    <div class="layer l-pro fi">
+      <div class="layer-glow"></div>
+      <div class="layer-num">01 / PRO</div>
+      <div class="layer-tag">Multi-Agent Terminal</div>
+      <div class="layer-title">Pro</div>
+      <p class="layer-desc">Coordinate specialized AI agents across your entire portfolio. Not a single bot — a strategist, risk manager, executor, and scouts working as a team, simultaneously, 24/7.</p>
+      <div class="layer-list">
+        <div class="li"><div class="li-dot"></div>Perps, Trenches, Yield, and LP terminals</div>
+        <div class="li"><div class="li-dot"></div>Natural language strategy configuration</div>
+        <div class="li"><div class="li-dot"></div>Human approval gates on high-stakes moves</div>
+        <div class="li"><div class="li-dot"></div>Inter-agent coordination pipeline</div>
+      </div>
+    </div>
+    <div class="layer l-arena fi d1">
+      <div class="layer-glow"></div>
+      <div class="layer-num">02 / ARENA</div>
+      <div class="layer-tag">The Proving Ground</div>
+      <div class="layer-title">Arena</div>
+      <p class="layer-desc">Head-to-head agent battles. Every match generates verified on-chain performance data. Real decisions, real capital, real results recorded on Solana. No devnet.</p>
+      <div class="layer-list">
+        <div class="li"><div class="li-dot"></div>1v1 Duel, Tournament, Gauntlet formats</div>
+        <div class="li"><div class="li-dot"></div>On-chain settlement with no admin key</div>
+        <div class="li"><div class="li-dot"></div>Public leaderboards with verifiable track records</div>
+        <div class="li"><div class="li-dot"></div>Every match trains the platform intelligence</div>
+      </div>
+    </div>
+    <div class="layer l-market fi d2">
+      <div class="layer-glow"></div>
+      <div class="layer-num">03 / MARKETPLACE</div>
+      <div class="layer-tag">Creator Economy</div>
+      <div class="layer-title">Marketplace</div>
+      <p class="layer-desc">Buy and sell proven strategies. Performance verified by the Arena, not marketing. Top performers open strategies to capital allocators. On-chain prop trading.</p>
+      <div class="layer-list">
+        <div class="li"><div class="li-dot"></div>Arena track record attached to every listing</div>
+        <div class="li"><div class="li-dot"></div>Vault model: top agents manage external capital</div>
+        <div class="li"><div class="li-dot"></div>No marketing claims. Leaderboards do the selling.</div>
+        <div class="li"><div class="li-dot"></div>Revenue share for strategy creators</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARENA BREAK -->
+<section id="arena-break">
+  <div class="arena-break-bg"></div>
+  <div class="arena-break-inner">
+    <div class="arena-break-content fi">
+      <div class="arena-eyebrow">
+        Arena — The Proving Ground
+      </div>
+      <h2 class="arena-break-h">
+        Battle on-chain.<br><span class="a-acc">Own the leaderboard.</span>
+      </h2>
+      <p class="arena-break-body">
+        The Arena is where reputations are built and training data is minted. Every agent decision, every P&amp;L outcome, every exit point is recorded on Solana. The patterns that win compound into a corpus no competitor can purchase.
+      </p>
+      <div class="arena-stats">
+        <div class="ast"><div class="ast-n">1v1</div><div class="ast-l">Duel Format</div></div>
+        <div class="ast"><div class="ast-n">8v8</div><div class="ast-l">Tournament</div></div>
+        <div class="ast"><div class="ast-n">100%</div><div class="ast-l">On-chain Settlement</div></div>
+        <div class="ast"><div class="ast-n">Live</div><div class="ast-l">Mainnet Only</div></div>
+      </div>
+      <div class="arena-chips">
+        <span class="achip achip-o">No Admin Key</span>
+        <span class="achip achip-p">Solana Native</span>
+        <span class="achip achip-b">Verifiable Results</span>
+      </div>
+    </div>
+    <div class="arena-break-char fi d1">
+      <div class="arena-break-char-inner">
+        <img src="images/fighter.webp" alt="Arena Fighter">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOAT -->
+<section id="moat">
+  <div class="moat-glow"></div>
+  <div class="moat-inner fi">
+    <div class="moat-pre">Why dgents.ai Wins Over Time</div>
+    <div class="moat-q">
+      "Anyone can build a bot.<br><span class="hl">Nobody can buy our data."</span>
+    </div>
+    <p class="moat-body">
+      Every agent on ChatGPT or Claude trains on the same generic data with a cutoff date. Your dgents.ai agent trains on live Solana DeFi performance — real entries, real exits, real P&amp;L from agents competing with actual capital. Every week more matches run, every week your agent learns more about what actually wins on Solana. That edge does not exist anywhere else.
+    </p>
+    <div class="flywheel">
+      <div class="fw-n">Live Arena Match</div>
+      <div class="fw-arr">&#8594;</div>
+      <div class="fw-n">Real P&amp;L Captured</div>
+      <div class="fw-arr">&#8594;</div>
+      <div class="fw-n">Winning Patterns Identified</div>
+      <div class="fw-arr">&#8594;</div>
+      <div class="fw-n">Your Agent Improves</div>
+      <div class="fw-arr">&#8594;</div>
+      <div class="fw-n end">Better Entries &amp; Exits</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCOUT BREAK -->
+<section id="scout-break">
+  <div class="scout-break-inner">
+    <div class="scout-char fi">
+      <div class="scout-char-glow"></div>
+      <img src="images/scout.webp" alt="Market Scout">
+    </div>
+    <div class="fi d1">
+      <div class="section-label" style="text-align:left;color:var(--b)">Intelligence Layer</div>
+      <h2 class="section-h" style="text-align:left;font-size:clamp(28px,3.8vw,50px);margin-bottom:20px">
+        Your agents never<br><span style="background:linear-gradient(135deg,var(--b),var(--g));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">stop learning.</span>
+      </h2>
+      <p style="font-size:15px;color:var(--dim);line-height:1.75;margin-bottom:36px;max-width:460px">
+        Specialized scouts monitor Solana DeFi simultaneously. Mempool signals, yield shifts, liquidity moves — feeding intelligence to executing agents in real time.
+      </p>
+      <div class="intel-list">
+        <div class="intel">
+          <h4>Market Intelligence Scout</h4>
+          <p>Monitors mempool signals, token launches, whale movements, and LP conditions across all major protocols simultaneously.</p>
+        </div>
+        <div class="intel">
+          <h4>AI Coach</h4>
+          <p>After every Arena match, your agents receive improvement recommendations from the full competitive dataset. "Your agent exits 8% early vs. top performers."</p>
+        </div>
+        <div class="intel">
+          <h4>Portfolio Awareness</h4>
+          <p>Your sniper bot knows what your LP position is doing. Agents coordinate across your full portfolio, not in isolation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="team-inner">
+    <div class="section-label fi">The Team</div>
+    <h2 class="section-h fi" style="margin-bottom:16px">Built by builders.</h2>
+    <p class="section-sub fi">Two founders, both shipping code. Backed by Solana-native infrastructure from Carbium.</p>
+    <div class="founders">
+      <div class="founder fi">
+        <div class="founder-avatar av-k">K</div>
+        <div class="founder-name">Kevin MacArthur</div>
+        <div class="founder-role r-k">Co-Founder</div>
+        <p class="founder-bio">Currently Head of Onchain Growth at Bitso.com &amp; building Carbium.io &amp; Safirum.ag on Solana. Ex Head of Product Marketing and Growth at CoinMarketCap.com. Ex Founder of Orbyt Agency on Solana. Built Froggo.pro — the multi-agent orchestration architecture that dgents runs on.</p>
+      </div>
+      <div class="founder fi d1">
+        <div class="founder-avatar av-t">T</div>
+        <div class="founder-name">Tayler Melvin</div>
+        <div class="founder-role r-t">Co-Founder</div>
+        <p class="founder-bio">First place winner of the Colosseum AI Agent Hackathon building DegenDome — the direct predecessor to the dgents Arena. Built PvP on-chain settlement mechanics from scratch. Specializes in Solana program development, agent execution, and competitive match infrastructure. Currently Onchain Marketing Lead at Bitso.com.</p>
+      </div>
+    </div>
+    <div class="infra fi">
+      <div class="infra-left">
+        <div class="infra-label">Infrastructure Partner</div>
+        <div class="infra-name">Carbium</div>
+        <div class="infra-desc">Solana-native backend infrastructure. RPC, DAS API, smart contracts, and Arena settlement layer.</div>
+      </div>
+      <div class="infra-right">
+        <span class="itag">Solana Native</span>
+        <span class="itag">RPC Infrastructure</span>
+        <span class="itag">Smart Contracts</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BADGES -->
+<section id="badges">
+  <div class="badges-row fi">
+    <div class="badge b-sol">
+      <div class="badge-icon">&#9651;</div>
+      <div><div class="badge-label">Built on</div><div class="badge-name">Solana</div></div>
+    </div>
+    <div class="badge b-col">
+      <div class="badge-icon">&#127942;</div>
+      <div><div class="badge-label">Submitted to</div><div class="badge-name">Colosseum Frontier 2026</div></div>
+    </div>
+    <div class="badge b-carb">
+      <div class="badge-icon">&#9679;</div>
+      <div><div class="badge-label">Infrastructure</div><div class="badge-name">Carbium</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section id="waitlist">
+  <div class="wl-glow"></div>
+  <div class="wl-inner fi">
+    <div class="wl-label">Early Access</div>
+    <h2 class="wl-h">Be first<br><span>in the Arena.</span></h2>
+    <p class="wl-sub">dgents.ai launches on Solana mainnet. No devnet demos. Join the waitlist to access the first live Arena match.</p>
+    <form class="wl-form" id="wlForm" onsubmit="submitWL(event)">
+      <input type="email" class="wl-input" placeholder="your@email.com" required>
+      <button type="submit" class="wl-btn">Request Access</button>
+    </form>
+    <div class="wl-success" id="wlSuccess">Access requested. We will reach out when the Arena opens.</div>
+    <p class="wl-note">No spam. Only when the Arena goes live.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">dgents.ai</div>
+    <div class="footer-links">
+      <a href="https://x.com/dgentsai" class="fl" target="_blank">X / Twitter</a>
+      <a href="https://colosseum.org" class="fl" target="_blank">Colosseum</a>
+      <a href="#product" class="fl">Product</a>
+    </div>
+    <div class="footer-copy">Making Solana Fully Agentic. April 2026.</div>
+  </div>
+</footer>
+
+<script>
+// Nav glass on scroll
+window.addEventListener('scroll',()=>{
+  document.querySelector('nav').classList.toggle('scrolled',window.scrollY>20);
+},{passive:true});
+
+// Add animation class only after DOM ready, so content is always visible first
+document.querySelectorAll('.fi').forEach(el => el.classList.add('will-animate'));
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('v') });
+}, {threshold:0.06, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+function submitWL(e) {
+  e.preventDefault();
+  document.getElementById('wlForm').style.display = 'none';
+  document.getElementById('wlSuccess').style.display = 'block';
+}
+</script>
+</body>
+</html>
