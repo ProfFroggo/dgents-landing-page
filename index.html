@@ -121,6 +121,9 @@ nav.scrolled{
   opacity:0.28;
   filter:saturate(0.6) hue-rotate(220deg) brightness(0.7);
   overflow:hidden;
+  /* Alpha mask fades left edge — works regardless of bg color behind it */
+  -webkit-mask-image:linear-gradient(to right, transparent 0%, black 26%);
+  mask-image:linear-gradient(to right, transparent 0%, black 26%);
 }
 .hero-chart-frame iframe{
   width:100%;height:100%;border:none;
@@ -140,14 +143,15 @@ nav.scrolled{
   white-space:nowrap;will-change:transform;
   flex-shrink:0;width:max-content;
 }
-@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* -33.333% = exactly one set wide (of 3 copies), seamless regardless of viewport */
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-33.333%)}}
 .ticker-item{
   font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
   letter-spacing:0.1em;display:flex;align-items:center;gap:7px;
 }
-.ticker-sym{color:rgba(255,255,255,0.35)}
-.ticker-price{color:rgba(255,255,255,0.9)}
-.ticker-chg{color:rgba(255,255,255,0.4)}
+.ticker-sym{color:rgba(255,255,255,0.35);min-width:36px}
+.ticker-price{color:rgba(255,255,255,0.9);display:inline-block;min-width:60px}
+.ticker-chg{color:rgba(255,255,255,0.4);display:inline-block;min-width:44px}
 .ticker-up{color:#14F195}
 .ticker-down{color:#FF4444}
 
@@ -686,14 +690,6 @@ footer{
   .hero-ghost{font-size:20vw;left:-4%}
 }
 
-/* ── HERO CHART LEFT FADE (sibling overlay, not affected by iframe opacity) ── */
-.hero-chart-fade-mask{
-  position:absolute;left:0;top:0;
-  width:72%;height:calc(100% - 32px);
-  background:linear-gradient(to right,var(--bg) 0%,var(--bg) 30%,rgba(10,4,20,0.92) 46%,rgba(10,4,20,0.55) 58%,rgba(10,4,20,0.1) 72%,transparent 100%);
-  z-index:2;pointer-events:none;
-}
-
 /* ── ACTIVITY STRIP ── */
 .activity-strip{
   background:rgba(4,1,12,0.95);
@@ -765,6 +761,44 @@ footer{
 @keyframes alc-pulse{0%{width:56%}100%{width:70%}}
 .alc-meta{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.04em}
 
+/* ── AI COACH REPORT ── */
+.coach-report{
+  margin-top:12px;padding:16px 18px;
+  background:rgba(153,69,255,0.05);
+  border:1px solid rgba(153,69,255,0.18);
+  border-radius:2px;
+}
+.cr-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.cr-icon{color:var(--p);display:flex;align-items:center;flex-shrink:0}
+.cr-title{
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  letter-spacing:0.14em;color:rgba(255,255,255,0.45);text-transform:uppercase;
+}
+.cr-tag{
+  margin-left:auto;font-family:'Orbitron',monospace;font-size:8px;
+  padding:2px 8px;background:rgba(153,69,255,0.12);
+  border:1px solid rgba(153,69,255,0.25);color:var(--p);letter-spacing:0.1em;
+}
+.cr-metrics{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.cr-label{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:5px;letter-spacing:0.03em}
+.cr-bars{display:flex;flex-direction:column;gap:4px}
+.cr-bar-row{display:flex;align-items:center;gap:7px}
+.cr-bar-lbl{
+  font-family:'Orbitron',monospace;font-size:8px;
+  color:rgba(255,255,255,0.25);width:22px;flex-shrink:0;
+}
+.cr-track{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.cr-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
+.cr-fill-you{background:var(--p)}
+.cr-fill-top{background:var(--g);opacity:0.55}
+.cr-val{
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  width:30px;text-align:right;flex-shrink:0;
+}
+.cr-val-you{color:var(--p)}
+.cr-val-top{color:var(--g);opacity:0.6}
+.cr-note{font-size:10px;color:rgba(255,255,255,0.18);line-height:1.5;letter-spacing:0.02em;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px}
+
 /* ── CHART GRID OVERLAY on moat section ── */
 #moat::before{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
@@ -816,8 +850,6 @@ footer{
   <div class="hero-chart-frame">
     <iframe src="https://birdeye.so/tv-widget/So11111111111111111111111111111111111111112?chain=solana&viewMode=pair&chartInterval=15&chartType=CANDLE&chartTimezone=UTC&chartLeftToolbar=hide&theme=dark" loading="lazy" title="SOL/USDC chart"></iframe>
   </div>
-  <!-- Left fade mask — separate from chart so opacity:0.28 doesn't affect it -->
-  <div class="hero-chart-fade-mask"></div>
   <div class="hero-ground"></div>
   <div class="hero-char">
     <img src="images/strategist.webp" alt="Strategist Agent">
@@ -1058,6 +1090,39 @@ footer{
           </div>
         </div>
       </div>
+
+      <!-- Coach Performance Report -->
+      <div class="coach-report fi d2">
+        <div class="cr-header">
+          <span class="cr-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+          <span class="cr-title">Coach Report &mdash; Match #1,247</span>
+          <span class="cr-tag">vs Top 10%</span>
+        </div>
+        <div class="cr-metrics">
+          <div class="cr-metric">
+            <div class="cr-label">Exit Efficiency</div>
+            <div class="cr-bars">
+              <div class="cr-bar-row"><span class="cr-bar-lbl">You</span><div class="cr-track"><div class="cr-fill cr-fill-you" style="width:82%"></div></div><span class="cr-val cr-val-you">82%</span></div>
+              <div class="cr-bar-row"><span class="cr-bar-lbl">Top</span><div class="cr-track"><div class="cr-fill cr-fill-top" style="width:94%"></div></div><span class="cr-val cr-val-top">94%</span></div>
+            </div>
+          </div>
+          <div class="cr-metric">
+            <div class="cr-label">Entry Accuracy</div>
+            <div class="cr-bars">
+              <div class="cr-bar-row"><span class="cr-bar-lbl">You</span><div class="cr-track"><div class="cr-fill cr-fill-you" style="width:91%"></div></div><span class="cr-val cr-val-you">91%</span></div>
+              <div class="cr-bar-row"><span class="cr-bar-lbl">Top</span><div class="cr-track"><div class="cr-fill cr-fill-top" style="width:96%"></div></div><span class="cr-val cr-val-top">96%</span></div>
+            </div>
+          </div>
+          <div class="cr-metric">
+            <div class="cr-label">Drawdown Control</div>
+            <div class="cr-bars">
+              <div class="cr-bar-row"><span class="cr-bar-lbl">You</span><div class="cr-track"><div class="cr-fill cr-fill-you" style="width:68%"></div></div><span class="cr-val cr-val-you">68%</span></div>
+              <div class="cr-bar-row"><span class="cr-bar-lbl">Top</span><div class="cr-track"><div class="cr-fill cr-fill-top" style="width:89%"></div></div><span class="cr-val cr-val-top">89%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="cr-note">Agents receive this report after every Arena match and self-improve from the full competitive dataset.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1146,17 +1211,20 @@ footer{
 
 <script>
 // ── Live ticker ──
-// DOM built ONCE — only text values update on refresh, animation never resets
+// DOM built ONCE with 3 copies — only text updates, animation never resets
 (function(){
-  const TOKENS = [
-    {id:'So11111111111111111111111111111111111111112', sym:'SOL'},
-    {id:'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', sym:'USDC'},
-    {id:'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', sym:'JUP'},
-    {id:'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', sym:'WIF'},
-    {id:'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', sym:'BONK'},
-    {id:'HZ1JovNiVvGrwvJnpUvida8mPCEDHNtEoANa1DvfZPUF', sym:'PYTH'},
-  ];
-  const ALL_SYMS = ['BTC','ETH',...TOKENS.map(t=>t.sym)];
+  // CoinGecko IDs for all tokens — one API call, CORS-safe, reliable
+  const CG_MAP = {
+    'BTC' : 'bitcoin',
+    'ETH' : 'ethereum',
+    'SOL' : 'solana',
+    'JUP' : 'jupiter-exchange-solana',
+    'WIF' : 'dogwifcoin',
+    'BONK': 'bonk',
+    'PYTH': 'pyth-network',
+    'RAY' : 'raydium',
+  };
+  const ALL_SYMS = Object.keys(CG_MAP);
 
   function fmt(n){
     if(n>=1000) return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
@@ -1168,13 +1236,12 @@ footer{
   function buildTicker(){
     const track = document.getElementById('tickerTrack');
     if(!track) return;
-    // Double the items — animation goes 0 → -50% = one full set, seamless loop
-    const doubled = [...ALL_SYMS,...ALL_SYMS];
-    track.innerHTML = doubled.map(sym=>`<span class="ticker-item"><span class="ticker-sym">${sym}</span><span class="ticker-price" data-sym="${sym}">—</span><span class="ticker-chg" data-sym="${sym}">—</span></span>`).join('');
+    // 3 copies — animation goes 0 → -33.333% = exactly one set, fills any viewport
+    const tripled = [...ALL_SYMS,...ALL_SYMS,...ALL_SYMS];
+    track.innerHTML = tripled.map(sym=>`<span class="ticker-item"><span class="ticker-sym">${sym}</span><span class="ticker-price" data-sym="${sym}">—</span><span class="ticker-chg" data-sym="${sym}">—</span></span>`).join('');
   }
 
   function updateTicker(data){
-    // Only update text — innerHTML untouched, CSS animation continues uninterrupted
     document.querySelectorAll('#tickerTrack .ticker-price').forEach(el=>{
       const d = data[el.dataset.sym];
       if(d) el.textContent = fmt(d.price);
@@ -1186,37 +1253,23 @@ footer{
         el.className = 'ticker-chg '+(d.change>=0?'ticker-up':'ticker-down');
       }
     });
-    // Update intel viz price
+    // Update SOL price in intel viz
     const solEl = document.getElementById('ivSolPrice');
     if(solEl && data['SOL']) solEl.textContent = fmt(data['SOL'].price);
   }
 
-  buildTicker(); // Called once at page load
-
-  let prevPrices = {};
+  buildTicker();
 
   async function fetchPrices(){
     try{
-      const ids = TOKENS.map(t=>t.id).join(',');
-      const [jupRes, cgRes] = await Promise.all([
-        fetch(`https://price.jup.ag/v6/price?ids=${ids}`),
-        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true`)
-      ]);
-      const jupData = await jupRes.json();
-      const cgData  = await cgRes.json();
-
+      const cgIds = Object.values(CG_MAP).join(',');
+      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds}&vs_currencies=usd&include_24hr_change=true`);
+      const cg = await res.json();
       const data = {};
-      TOKENS.forEach(t=>{
-        const p = jupData.data?.[t.id];
-        const price = p?.price || 0;
-        const prev  = prevPrices[t.id] || price;
-        const change = prev ? ((price-prev)/prev)*100 : 0;
-        prevPrices[t.id] = price;
-        if(price>0) data[t.sym] = {price, change};
+      Object.entries(CG_MAP).forEach(([sym,id])=>{
+        const d = cg[id];
+        if(d) data[sym] = {price:d.usd, change:d.usd_24h_change||0};
       });
-      if(cgData.bitcoin)  data['BTC'] = {price:cgData.bitcoin.usd,  change:cgData.bitcoin.usd_24h_change||0};
-      if(cgData.ethereum) data['ETH'] = {price:cgData.ethereum.usd, change:cgData.ethereum.usd_24h_change||0};
-
       updateTicker(data);
     } catch(e){
       console.warn('Ticker fetch failed',e);
