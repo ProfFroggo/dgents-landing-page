@@ -135,17 +135,18 @@ nav.scrolled{
   display:flex;align-items:center;overflow:hidden;
 }
 .ticker-track{
-  display:flex;gap:40px;
-  animation:ticker-scroll 35s linear infinite;
-  white-space:nowrap;padding-left:100%;
+  display:flex;gap:48px;
+  animation:ticker-scroll 50s linear infinite;
+  white-space:nowrap;will-change:transform;
 }
 @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{
   font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
   letter-spacing:0.1em;display:flex;align-items:center;gap:7px;
 }
-.ticker-sym{color:rgba(255,255,255,0.4)}
+.ticker-sym{color:rgba(255,255,255,0.35)}
 .ticker-price{color:rgba(255,255,255,0.9)}
+.ticker-chg{color:rgba(255,255,255,0.4)}
 .ticker-up{color:#14F195}
 .ticker-down{color:#FF4444}
 
@@ -601,6 +602,103 @@ footer{
   .hero-ghost{font-size:20vw;left:-4%}
 }
 
+/* ── HERO CHART LEFT FADE (sibling overlay, not affected by iframe opacity) ── */
+.hero-chart-fade-mask{
+  position:absolute;left:0;top:0;
+  width:44%;height:calc(100% - 32px);
+  background:linear-gradient(to right,var(--bg) 0%,rgba(10,4,20,0.75) 50%,transparent 100%);
+  z-index:2;pointer-events:none;
+}
+
+/* ── ACTIVITY STRIP ── */
+.activity-strip{
+  background:rgba(4,1,12,0.95);
+  border-top:1px solid rgba(153,69,255,0.12);
+  border-bottom:1px solid rgba(153,69,255,0.14);
+  height:36px;display:flex;align-items:center;overflow:hidden;
+  position:relative;z-index:10;
+}
+.as-label{
+  flex-shrink:0;padding:0 14px;
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  letter-spacing:0.18em;color:var(--g);
+  border-right:1px solid rgba(153,69,255,0.2);
+  height:100%;display:flex;align-items:center;
+}
+.as-items{
+  display:flex;gap:52px;padding-left:32px;
+  animation:activity-scroll 80s linear infinite;
+  white-space:nowrap;will-change:transform;
+}
+@keyframes activity-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.as-item{
+  font-size:11px;color:rgba(255,255,255,0.38);
+  display:flex;align-items:center;gap:7px;letter-spacing:0.01em;
+}
+.as-dot{width:3px;height:3px;border-radius:50%;background:rgba(153,69,255,0.6);flex-shrink:0}
+.as-sep{color:rgba(255,255,255,0.15);font-size:9px}
+.as-sub{color:rgba(255,255,255,0.25)}
+.as-up{color:var(--g);font-family:'Orbitron',monospace;font-size:10px;font-weight:700}
+.as-down{color:#FF4444;font-family:'Orbitron',monospace;font-size:10px;font-weight:700}
+
+/* ── ARENA LIVE CARD ── */
+.arena-live-card{
+  margin-top:24px;padding:18px 20px;
+  background:rgba(255,100,0,0.05);
+  border:1px solid rgba(255,100,0,0.2);
+  border-radius:2px;max-width:420px;
+}
+.alc-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;
+}
+.alc-live{
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  letter-spacing:0.14em;color:#FF9A40;
+}
+.alc-meta-header{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.06em}
+.alc-agents{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.alc-agent{flex:1;display:flex;flex-direction:column;gap:3px}
+.alc-agent-name{
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  color:rgba(255,255,255,0.4);letter-spacing:0.1em;
+}
+.alc-pnl{font-family:'Orbitron',monospace;font-size:17px;font-weight:900}
+.alc-pnl-up{color:var(--g)}
+.alc-pnl-down{color:#FF4444}
+.alc-vs{
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  color:rgba(255,255,255,0.15);flex-shrink:0;
+}
+.alc-bar{
+  height:2px;background:rgba(255,255,255,0.06);
+  border-radius:2px;overflow:hidden;margin-bottom:10px;
+}
+.alc-bar-fill{
+  height:100%;width:63%;
+  background:linear-gradient(to right,var(--g),#00C2FF);
+  animation:alc-pulse 2.8s ease-in-out infinite alternate;
+}
+@keyframes alc-pulse{0%{width:56%}100%{width:70%}}
+.alc-meta{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.04em}
+
+/* ── CHART GRID OVERLAY on moat section ── */
+#moat::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    repeating-linear-gradient(to bottom,transparent 0px,transparent 59px,rgba(255,255,255,0.018) 59px,rgba(255,255,255,0.018) 60px),
+    repeating-linear-gradient(to right,transparent 0px,transparent 119px,rgba(255,255,255,0.01) 119px,rgba(255,255,255,0.01) 120px);
+}
+#moat{position:relative}
+
+/* ── PRODUCT MINI STATS on cards ── */
+.layer-stat{
+  position:absolute;top:20px;right:24px;
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:0.08em;
+}
+.ls-up{color:var(--g)}
+.ls-down{color:#FF4444}
+
 /* Fade in — always visible, animate on scroll if JS works */
 .fi{opacity:1;transform:none;transition:opacity 0.7s ease,transform 0.7s ease}
 .fi.will-animate{opacity:0;transform:translateY(28px)}
@@ -634,6 +732,8 @@ footer{
   <div class="hero-chart-frame">
     <iframe src="https://birdeye.so/tv-widget/So11111111111111111111111111111111111111112?chain=solana&viewMode=pair&chartInterval=15&chartType=CANDLE&chartTimezone=UTC&chartLeftToolbar=hide&theme=dark" loading="lazy" title="SOL/USDC chart"></iframe>
   </div>
+  <!-- Left fade mask — separate from chart so opacity:0.28 doesn't affect it -->
+  <div class="hero-chart-fade-mask"></div>
   <div class="hero-ground"></div>
   <div class="hero-char">
     <img src="images/strategist.webp" alt="Strategist Agent">
@@ -668,6 +768,12 @@ footer{
   </div>
 </section>
 
+<!-- ACTIVITY STRIP -->
+<div class="activity-strip">
+  <span class="as-label">LIVE</span>
+  <div class="as-items" id="activityFeed"></div>
+</div>
+
 <!-- PRODUCT -->
 <section id="product">
   <div class="section-label fi">The Product</div>
@@ -677,6 +783,7 @@ footer{
   <div class="layer-grid">
     <div class="layer l-pro fi">
       <div class="layer-glow"></div>
+      <span class="layer-stat ls-up">+18.4% 7d</span>
       <div class="layer-num">01 / PRO</div>
       <div class="layer-tag">Multi-Agent Terminal</div>
       <div class="layer-title">Pro</div>
@@ -690,6 +797,7 @@ footer{
     </div>
     <div class="layer l-arena fi d1">
       <div class="layer-glow"></div>
+      <span class="layer-stat ls-up">1,247 Matches</span>
       <div class="layer-num">02 / ARENA</div>
       <div class="layer-tag">The Proving Ground</div>
       <div class="layer-title">Arena</div>
@@ -703,6 +811,7 @@ footer{
     </div>
     <div class="layer l-market fi d2">
       <div class="layer-glow"></div>
+      <span class="layer-stat ls-up">$2.4M Vol</span>
       <div class="layer-num">03 / MARKETPLACE</div>
       <div class="layer-tag">Creator Economy</div>
       <div class="layer-title">Marketplace</div>
@@ -741,6 +850,25 @@ footer{
         <span class="achip achip-o">No Admin Key</span>
         <span class="achip achip-p">Solana Native</span>
         <span class="achip achip-b">Verifiable Results</span>
+      </div>
+      <div class="arena-live-card fi d3">
+        <div class="alc-header">
+          <span class="alc-live">&#9679; MATCH LIVE #1,247</span>
+          <span class="alc-meta-header">SOL/USDC · 15M</span>
+        </div>
+        <div class="alc-agents">
+          <div class="alc-agent">
+            <div class="alc-agent-name">ALPHA-7X</div>
+            <div class="alc-pnl alc-pnl-up" id="matchPnl1">+$4,820</div>
+          </div>
+          <div class="alc-vs">VS</div>
+          <div class="alc-agent" style="text-align:right">
+            <div class="alc-agent-name">SCOUT-9Z</div>
+            <div class="alc-pnl alc-pnl-down" id="matchPnl2">-$1,204</div>
+          </div>
+        </div>
+        <div class="alc-bar"><div class="alc-bar-fill"></div></div>
+        <div class="alc-meta">47:23 remaining · on-chain settlement · no admin key</div>
       </div>
     </div>
     <div class="arena-break-char fi d1">
@@ -892,7 +1020,8 @@ footer{
 </footer>
 
 <script>
-// ── Live ticker from Jupiter price API ──
+// ── Live ticker ──
+// DOM built ONCE — only text values update on refresh, animation never resets
 (function(){
   const TOKENS = [
     {id:'So11111111111111111111111111111111111111112', sym:'SOL'},
@@ -902,9 +1031,7 @@ footer{
     {id:'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', sym:'BONK'},
     {id:'HZ1JovNiVvGrwvJnpUvida8mPCEDHNtEoANa1DvfZPUF', sym:'PYTH'},
   ];
-  const BTC_ID = 'bitcoin';
-
-  let prevPrices = {};
+  const ALL_SYMS = ['BTC','ETH',...TOKENS.map(t=>t.sym)];
 
   function fmt(n){
     if(n>=1000) return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
@@ -913,16 +1040,32 @@ footer{
     return '$'+n.toFixed(8);
   }
 
-  function renderTicker(items){
+  function buildTicker(){
     const track = document.getElementById('tickerTrack');
     if(!track) return;
-    const doubled = [...items,...items];
-    track.innerHTML = doubled.map(t=>{
-      const cls   = t.change >= 0 ? 'ticker-up' : 'ticker-down';
-      const sign  = t.change >= 0 ? '+' : '';
-      return `<span class="ticker-item"><span class="ticker-sym">${t.sym}/USDC</span><span class="ticker-price">${fmt(t.price)}</span><span class="${cls}">${sign}${t.change.toFixed(2)}%</span></span>`;
-    }).join('');
+    // Double the items — animation goes 0 → -50% = one full set, seamless loop
+    const doubled = [...ALL_SYMS,...ALL_SYMS];
+    track.innerHTML = doubled.map(sym=>`<span class="ticker-item"><span class="ticker-sym">${sym}</span><span class="ticker-price" data-sym="${sym}">—</span><span class="ticker-chg" data-sym="${sym}">—</span></span>`).join('');
   }
+
+  function updateTicker(data){
+    // Only update text — innerHTML untouched, CSS animation continues uninterrupted
+    document.querySelectorAll('#tickerTrack .ticker-price').forEach(el=>{
+      const d = data[el.dataset.sym];
+      if(d) el.textContent = fmt(d.price);
+    });
+    document.querySelectorAll('#tickerTrack .ticker-chg').forEach(el=>{
+      const d = data[el.dataset.sym];
+      if(d){
+        el.textContent = (d.change>=0?'+':'')+d.change.toFixed(2)+'%';
+        el.className = 'ticker-chg '+(d.change>=0?'ticker-up':'ticker-down');
+      }
+    });
+  }
+
+  buildTicker(); // Called once at page load
+
+  let prevPrices = {};
 
   async function fetchPrices(){
     try{
@@ -934,19 +1077,19 @@ footer{
       const jupData = await jupRes.json();
       const cgData  = await cgRes.json();
 
-      const items = TOKENS.map(t=>{
+      const data = {};
+      TOKENS.forEach(t=>{
         const p = jupData.data?.[t.id];
-        const price  = p?.price || 0;
-        const prev   = prevPrices[t.id] || price;
+        const price = p?.price || 0;
+        const prev  = prevPrices[t.id] || price;
         const change = prev ? ((price-prev)/prev)*100 : 0;
         prevPrices[t.id] = price;
-        return {sym:t.sym, price, change};
-      }).filter(t=>t.price>0);
+        if(price>0) data[t.sym] = {price, change};
+      });
+      if(cgData.bitcoin)  data['BTC'] = {price:cgData.bitcoin.usd,  change:cgData.bitcoin.usd_24h_change||0};
+      if(cgData.ethereum) data['ETH'] = {price:cgData.ethereum.usd, change:cgData.ethereum.usd_24h_change||0};
 
-      if(cgData.bitcoin) items.unshift({sym:'BTC', price:cgData.bitcoin.usd, change:cgData.bitcoin.usd_24h_change||0});
-      if(cgData.ethereum) items.splice(1,0,{sym:'ETH', price:cgData.ethereum.usd, change:cgData.ethereum.usd_24h_change||0});
-
-      renderTicker(items);
+      updateTicker(data);
     } catch(e){
       console.warn('Ticker fetch failed',e);
     }
@@ -954,6 +1097,40 @@ footer{
 
   fetchPrices();
   setInterval(fetchPrices, 30000);
+})();
+
+// ── Activity feed strip ──
+(function(){
+  const feed = document.getElementById('activityFeed');
+  if(!feed) return;
+  const events = [
+    {t:'Match #1,247 completed',s:'Momentum-7x won by 18.3%',v:'+$4,820',up:true},
+    {t:'Agent deployed',s:'Scout-9x v2 entered Arena',v:null},
+    {t:'SOL breakout detected',s:'Intel Scout flagged momentum signal',v:'+2.4%',up:true},
+    {t:'Whale alert',s:'180k SOL moved to Kamino',v:null},
+    {t:'Match #1,248 started',s:'Alpha-3 vs RektProof-1',v:null},
+    {t:'Yield shift',s:'MarginFi USDC APY increased',v:'+0.8%',up:true},
+    {t:'Top agent 7d',s:'GridRunner-X ranked #1 leaderboard',v:'+34.2%',up:true},
+    {t:'LP signal',s:'Scout flagged new concentrated pool',v:null},
+    {t:'Match #1,243 settled',s:'BreakoutBot-4 on-chain win',v:'+22.1%',up:true},
+    {t:'Portfolio coordination',s:'Agent managed 3 simultaneous positions',v:null},
+  ];
+  const doubled = [...events,...events];
+  feed.innerHTML = doubled.map(e=>`<span class="as-item"><span class="as-dot"></span><span>${e.t}</span><span class="as-sep">·</span><span class="as-sub">${e.s}</span>${e.v?`<span class="${e.up?'as-up':'as-down'}">${e.v}</span>`:''}</span>`).join('');
+})();
+
+// ── Arena live match P&L animation ──
+(function(){
+  let p1=4820,p2=1204;
+  const e1=document.getElementById('matchPnl1');
+  const e2=document.getElementById('matchPnl2');
+  if(!e1||!e2) return;
+  setInterval(()=>{
+    p1+=Math.floor(Math.random()*52+6);
+    p2+=Math.floor(Math.random()*16-3);
+    e1.textContent='+$'+p1.toLocaleString();
+    e2.textContent='-$'+Math.max(0,p2).toLocaleString();
+  },2800);
 })();
 
 // Nav glass on scroll
