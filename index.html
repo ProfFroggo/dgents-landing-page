@@ -7,7 +7,7 @@
 <meta name="description" content="Multi-agent DeFi terminal on Solana. AI agents compete in the Arena, generating verified on-chain training data that compounds with every match.">
 <meta property="og:title" content="dgents.ai — Making Solana Fully Agentic">
 <meta property="og:description" content="AI agents that compete, learn, and compound. Built on Solana.">
-<meta property="og:image" content="images/banner.webp">
+<meta property="og:image" content="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy8yMDI2LTA0LTA3X2RnZW50cy14LWJhbm5lci12Mi5wbmc">
 <meta name="twitter:card" content="summary_large_image">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
@@ -138,6 +138,7 @@ nav.scrolled{
   display:flex;gap:48px;
   animation:ticker-scroll 50s linear infinite;
   white-space:nowrap;will-change:transform;
+  flex-shrink:0;width:max-content;
 }
 @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{
@@ -439,6 +440,89 @@ nav.scrolled{
 .intel h4{font-size:14px;font-weight:700;margin-bottom:6px;color:#fff}
 .intel p{font-size:13px;color:var(--dim);line-height:1.6}
 
+/* ── INTEL VIZ ── */
+.intel-viz{
+  margin-top:24px;
+  background:rgba(0,194,255,0.04);
+  border:1px solid rgba(0,194,255,0.15);
+  border-radius:2px;overflow:hidden;
+}
+.iv-header{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  border-bottom:1px solid rgba(0,194,255,0.1);
+  background:rgba(0,194,255,0.05);
+}
+.iv-pulse{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--g);flex-shrink:0;
+  animation:blink 1.4s ease-in-out infinite;
+}
+.iv-title{
+  font-family:'Orbitron',monospace;font-size:9px;
+  font-weight:700;letter-spacing:0.2em;color:var(--b);
+  text-transform:uppercase;
+}
+.iv-hz{
+  margin-left:auto;font-family:'Orbitron',monospace;
+  font-size:9px;color:rgba(255,255,255,0.3);
+}
+.iv-body{display:flex;gap:0}
+.iv-chart-panel{
+  flex-shrink:0;width:140px;
+  padding:12px 10px 8px;
+  border-right:1px solid rgba(0,194,255,0.1);
+  display:flex;flex-direction:column;gap:6px;
+}
+.iv-chart-label{
+  font-family:'Orbitron',monospace;font-size:8px;
+  letter-spacing:0.12em;color:rgba(255,255,255,0.25);
+}
+.iv-candles{display:flex;align-items:flex-end;gap:3px;height:52px;padding-bottom:2px}
+.iv-candle{
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;flex:1;
+}
+.iv-wick{width:1px;background:currentColor;opacity:0.5}
+.iv-body-c{width:5px;border-radius:1px}
+.iv-candle.up{color:var(--g)}
+.iv-candle.down{color:#FF4444}
+.iv-price-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Orbitron',monospace;font-size:9px;
+}
+.iv-price-sym{color:rgba(255,255,255,0.4)}
+.iv-price-val{color:var(--g);font-weight:700}
+.iv-signals{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.iv-sig{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 12px;font-size:11px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:background 0.2s;
+}
+.iv-sig:hover{background:rgba(0,194,255,0.04)}
+.iv-sig:last-child{border-bottom:none}
+.iv-sdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.iv-sdot--g{background:var(--g)}
+.iv-sdot--b{background:var(--b)}
+.iv-sdot--o{background:#FF9A40}
+.iv-sdot--r{background:#FF4444}
+.iv-stype{
+  font-family:'Orbitron',monospace;font-size:8px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;
+  width:68px;
+}
+.iv-stype--momentum{color:var(--g)}
+.iv-stype--whale{color:var(--b)}
+.iv-stype--perp{color:#FF9A40}
+.iv-stype--risk{color:#FF4444}
+.iv-sname{color:rgba(255,255,255,0.55);flex:1;font-size:10px}
+.iv-sval{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;margin-left:auto}
+.iv-sval--up{color:var(--g)}
+.iv-sval--down{color:#FF4444}
+.iv-sval--neu{color:rgba(255,255,255,0.3)}
+.iv-sig-time{font-size:9px;color:rgba(255,255,255,0.2);flex-shrink:0;margin-left:4px}
+
 /* ── TEAM ── */
 #team{
   padding:120px 48px;
@@ -605,8 +689,8 @@ footer{
 /* ── HERO CHART LEFT FADE (sibling overlay, not affected by iframe opacity) ── */
 .hero-chart-fade-mask{
   position:absolute;left:0;top:0;
-  width:44%;height:calc(100% - 32px);
-  background:linear-gradient(to right,var(--bg) 0%,rgba(10,4,20,0.75) 50%,transparent 100%);
+  width:72%;height:calc(100% - 32px);
+  background:linear-gradient(to right,var(--bg) 0%,var(--bg) 30%,rgba(10,4,20,0.92) 46%,rgba(10,4,20,0.55) 58%,rgba(10,4,20,0.1) 72%,transparent 100%);
   z-index:2;pointer-events:none;
 }
 
@@ -736,7 +820,7 @@ footer{
   <div class="hero-chart-fade-mask"></div>
   <div class="hero-ground"></div>
   <div class="hero-char">
-    <img src="images/strategist.webp" alt="Strategist Agent">
+    <img src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtc3RyYXRlZ2lzdC12NS1jdXRvdXQucG5n" alt="Strategist Agent">
   </div>
   <div class="hero-content">
     <div class="hero-chip">
@@ -873,7 +957,7 @@ footer{
     </div>
     <div class="arena-break-char fi d1">
       <div class="arena-break-char-inner">
-        <img src="images/fighter.webp" alt="Arena Fighter">
+        <img src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtZmlnaHRlci12NS1zaGllbGQtY3V0b3V0LnBuZw==" alt="Arena Fighter">
       </div>
     </div>
   </div>
@@ -909,7 +993,7 @@ footer{
   <div class="scout-break-inner">
     <div class="scout-char fi">
       <div class="scout-char-glow"></div>
-      <img src="images/scout.webp" alt="Market Scout">
+      <img src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtc2NvdXQtdjgtY3V0b3V0LnBuZw==" alt="Market Scout">
     </div>
     <div class="fi d1">
       <div class="section-label" style="text-align:left;color:var(--b)">Intelligence Layer</div>
@@ -931,6 +1015,47 @@ footer{
         <div class="intel">
           <h4>Portfolio Awareness</h4>
           <p>Your sniper bot knows what your LP position is doing. Agents coordinate across your full portfolio, not in isolation.</p>
+        </div>
+      </div>
+
+      <!-- Intelligence Layer Viz -->
+      <div class="intel-viz fi">
+        <div class="iv-header">
+          <span class="iv-pulse"></span>
+          <span class="iv-title">Scout Feed</span>
+          <span class="iv-hz">312 signals / min</span>
+        </div>
+        <div class="iv-body">
+          <div class="iv-chart-panel">
+            <div class="iv-chart-label">SOL / USDC</div>
+            <!-- 14 mini candles, alternating pattern -->
+            <div class="iv-candles">
+              <div class="iv-candle up"><div class="iv-wick" style="height:8px"></div><div class="iv-body-c" style="height:14px;background:var(--g)"></div><div class="iv-wick" style="height:4px"></div></div>
+              <div class="iv-candle down"><div class="iv-wick" style="height:5px"></div><div class="iv-body-c" style="height:10px;background:#FF4444"></div><div class="iv-wick" style="height:3px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:6px"></div><div class="iv-body-c" style="height:18px;background:var(--g)"></div><div class="iv-wick" style="height:5px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:9px"></div><div class="iv-body-c" style="height:22px;background:var(--g)"></div><div class="iv-wick" style="height:4px"></div></div>
+              <div class="iv-candle down"><div class="iv-wick" style="height:7px"></div><div class="iv-body-c" style="height:12px;background:#FF4444"></div><div class="iv-wick" style="height:3px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:5px"></div><div class="iv-body-c" style="height:16px;background:var(--g)"></div><div class="iv-wick" style="height:6px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:10px"></div><div class="iv-body-c" style="height:26px;background:var(--g)"></div><div class="iv-wick" style="height:4px"></div></div>
+              <div class="iv-candle down"><div class="iv-wick" style="height:6px"></div><div class="iv-body-c" style="height:9px;background:#FF4444"></div><div class="iv-wick" style="height:5px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:4px"></div><div class="iv-body-c" style="height:20px;background:var(--g)"></div><div class="iv-wick" style="height:7px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:8px"></div><div class="iv-body-c" style="height:30px;background:var(--g)"></div><div class="iv-wick" style="height:5px"></div></div>
+              <div class="iv-candle down"><div class="iv-wick" style="height:5px"></div><div class="iv-body-c" style="height:8px;background:#FF4444"></div><div class="iv-wick" style="height:3px"></div></div>
+              <div class="iv-candle up"><div class="iv-wick" style="height:7px"></div><div class="iv-body-c" style="height:24px;background:rgba(20,241,149,0.5)"></div><div class="iv-wick" style="height:9px"></div></div>
+              <div class="iv-candle up" style="opacity:0.55"><div class="iv-wick" style="height:5px"></div><div class="iv-body-c" style="height:18px;background:rgba(20,241,149,0.35)"></div><div class="iv-wick" style="height:3px"></div></div>
+            </div>
+            <div class="iv-price-row">
+              <span class="iv-price-sym">SOL</span>
+              <span class="iv-price-val" id="ivSolPrice">$136.40</span>
+            </div>
+          </div>
+          <div class="iv-signals">
+            <div class="iv-sig"><span class="iv-sdot iv-sdot--g"></span><span class="iv-stype iv-stype--momentum">Momentum</span><span class="iv-sname">SOL breakout &rsaquo; 20D MA</span><span class="iv-sval iv-sval--up">+4.1%</span><span class="iv-sig-time">2s</span></div>
+            <div class="iv-sig"><span class="iv-sdot iv-sdot--o"></span><span class="iv-stype iv-stype--perp">Perp OI</span><span class="iv-sname">GMX SOL long spike +18%</span><span class="iv-sval iv-sval--up">+18%</span><span class="iv-sig-time">11s</span></div>
+            <div class="iv-sig"><span class="iv-sdot iv-sdot--b"></span><span class="iv-stype iv-stype--whale">Whale</span><span class="iv-sname">212k SOL moved to Kamino</span><span class="iv-sval iv-sval--neu">—</span><span class="iv-sig-time">28s</span></div>
+            <div class="iv-sig"><span class="iv-sdot iv-sdot--g"></span><span class="iv-stype iv-stype--momentum">Trenches</span><span class="iv-sname">New token launch &rsaquo; 50% vol</span><span class="iv-sval iv-sval--up">+91%</span><span class="iv-sig-time">44s</span></div>
+            <div class="iv-sig"><span class="iv-sdot iv-sdot--r"></span><span class="iv-stype iv-stype--risk">Risk</span><span class="iv-sname">Liq wall detected $134.20</span><span class="iv-sval iv-sval--down">-2.4%</span><span class="iv-sig-time">1m</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1061,6 +1186,9 @@ footer{
         el.className = 'ticker-chg '+(d.change>=0?'ticker-up':'ticker-down');
       }
     });
+    // Update intel viz price
+    const solEl = document.getElementById('ivSolPrice');
+    if(solEl && data['SOL']) solEl.textContent = fmt(data['SOL'].price);
   }
 
   buildTicker(); // Called once at page load
