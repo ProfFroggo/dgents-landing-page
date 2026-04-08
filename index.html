@@ -7,7 +7,7 @@
 <meta name="description" content="Multi-agent DeFi terminal on Solana. AI agents compete in the Arena, generating verified on-chain training data that compounds with every match.">
 <meta property="og:title" content="dgents.ai — Making Solana Fully Agentic">
 <meta property="og:description" content="AI agents that compete, learn, and compound. Built on Solana.">
-<meta property="og:image" content="images/banner.webp">
+<meta property="og:image" content="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy8yMDI2LTA0LTA3X2RnZW50cy14LWJhbm5lci12Mi5wbmc">
 <meta name="twitter:card" content="summary_large_image">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
@@ -113,6 +113,33 @@ nav.scrolled{
   animation:float 4.5s ease-in-out infinite;
 }
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* ── CHART CANVAS ── */
+.hero-chart{
+  position:absolute;right:0;bottom:0;width:65%;height:75%;
+  z-index:1;pointer-events:none;opacity:0.18;
+}
+/* Ticker bar */
+.hero-ticker{
+  position:absolute;bottom:0;left:0;right:0;z-index:4;
+  height:32px;background:rgba(0,0,0,0.4);
+  border-top:1px solid rgba(153,69,255,0.2);
+  display:flex;align-items:center;overflow:hidden;
+}
+.ticker-track{
+  display:flex;gap:48px;
+  animation:ticker-scroll 28s linear infinite;
+  white-space:nowrap;padding-left:100%;
+}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:0.08em;display:flex;align-items:center;gap:8px;
+}
+.ticker-sym{color:rgba(255,255,255,0.5)}
+.ticker-price{color:#fff}
+.ticker-up{color:#14F195}
+.ticker-down{color:#FF4444}
 
 /* Ground glow beneath character */
 .hero-ground{
@@ -595,9 +622,11 @@ footer{
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-ghost">ARENA</div>
+  <!-- Candlestick chart background -->
+  <canvas class="hero-chart" id="heroChart"></canvas>
   <div class="hero-ground"></div>
   <div class="hero-char">
-    <img src="images/strategist.webp" alt="Strategist Agent">
+    <img src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtc3RyYXRlZ2lzdC12NS1jdXRvdXQucG5n" alt="Strategist Agent">
   </div>
   <div class="hero-content">
     <div class="hero-chip">
@@ -620,6 +649,26 @@ footer{
   <div class="scroll-hint">
     <span>Scroll</span>
     <div class="scroll-arrow"></div>
+  </div>
+  <!-- Ticker -->
+  <div class="hero-ticker">
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-item"><span class="ticker-sym">SOL/USDC</span><span class="ticker-price" id="t-sol">$148.32</span><span class="ticker-up" id="t-sol-d">+4.21%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">BTC/USDC</span><span class="ticker-price">$84,201</span><span class="ticker-up">+1.87%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">ETH/USDC</span><span class="ticker-price">$1,612</span><span class="ticker-down">-0.94%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">JUP/SOL</span><span class="ticker-price">$0.412</span><span class="ticker-up">+6.33%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">WIF/USDC</span><span class="ticker-price">$1.04</span><span class="ticker-down">-2.11%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">BONK/USDC</span><span class="ticker-price">$0.0000214</span><span class="ticker-up">+11.4%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">PYTH/SOL</span><span class="ticker-price">$0.188</span><span class="ticker-up">+3.05%</span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item"><span class="ticker-sym">SOL/USDC</span><span class="ticker-price">$148.32</span><span class="ticker-up">+4.21%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">BTC/USDC</span><span class="ticker-price">$84,201</span><span class="ticker-up">+1.87%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">ETH/USDC</span><span class="ticker-price">$1,612</span><span class="ticker-down">-0.94%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">JUP/SOL</span><span class="ticker-price">$0.412</span><span class="ticker-up">+6.33%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">WIF/USDC</span><span class="ticker-price">$1.04</span><span class="ticker-down">-2.11%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">BONK/USDC</span><span class="ticker-price">$0.0000214</span><span class="ticker-up">+11.4%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">PYTH/SOL</span><span class="ticker-price">$0.188</span><span class="ticker-up">+3.05%</span></span>
+    </div>
   </div>
 </section>
 
@@ -700,7 +749,7 @@ footer{
     </div>
     <div class="arena-break-char fi d1">
       <div class="arena-break-char-inner">
-        <img src="images/fighter.webp" alt="Arena Fighter">
+        <img src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtZmlnaHRlci12NS1zaGllbGQtY3V0b3V0LnBuZw==" alt="Arena Fighter">
       </div>
     </div>
   </div>
@@ -736,7 +785,7 @@ footer{
   <div class="scout-break-inner">
     <div class="scout-char fi">
       <div class="scout-char-glow"></div>
-      <img src="images/scout.webp" alt="Market Scout">
+      <img src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtc2NvdXQtdjgtY3V0b3V0LnBuZw==" alt="Market Scout">
     </div>
     <div class="fi d1">
       <div class="section-label" style="text-align:left;color:var(--b)">Intelligence Layer</div>
@@ -847,6 +896,85 @@ footer{
 </footer>
 
 <script>
+// ── Candlestick chart canvas ──
+(function(){
+  const canvas = document.getElementById('heroChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, candles = [];
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    buildCandles();
+  }
+
+  function buildCandles(){
+    candles = [];
+    const n = Math.floor(W / 22);
+    let price = 148;
+    for(let i=0;i<n;i++){
+      const open  = price;
+      const move  = (Math.random()-0.44)*6;
+      const close = Math.max(80, open + move);
+      const high  = Math.max(open,close) + Math.random()*3;
+      const low   = Math.min(open,close) - Math.random()*3;
+      candles.push({open,close,high,low});
+      price = close;
+    }
+  }
+
+  function priceToY(p){ const min=70,max=180; return H - ((p-min)/(max-min)) * H * 0.8 - H*0.1; }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cw=14, gap=8, total=cw+gap;
+    candles.forEach((c,i)=>{
+      const x = i*total + gap;
+      const bull = c.close >= c.open;
+      const col  = bull ? 'rgba(20,241,149,0.9)' : 'rgba(255,68,68,0.9)';
+      // wick
+      ctx.strokeStyle = col;
+      ctx.lineWidth   = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x+cw/2, priceToY(c.high));
+      ctx.lineTo(x+cw/2, priceToY(c.low));
+      ctx.stroke();
+      // body
+      const y1 = priceToY(Math.max(c.open,c.close));
+      const y2 = priceToY(Math.min(c.open,c.close));
+      const bh = Math.max(2, y2-y1);
+      ctx.fillStyle = col;
+      ctx.fillRect(x, y1, cw, bh);
+    });
+
+    // P&L curve overlay
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(153,69,255,0.5)';
+    ctx.lineWidth = 2;
+    candles.forEach((c,i)=>{
+      const x = i*(cw+gap)+gap+cw/2;
+      const y = priceToY(c.close);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+
+  // Subtle random tick animation
+  setInterval(()=>{
+    if(!candles.length) return;
+    const last = candles[candles.length-1];
+    last.close = Math.max(80, last.close + (Math.random()-0.48)*1.5);
+    last.high  = Math.max(last.high, last.close);
+    last.low   = Math.min(last.low, last.close);
+    draw();
+  }, 800);
+})();
+
 // Nav glass on scroll
 window.addEventListener('scroll',()=>{
   document.querySelector('nav').classList.toggle('scrolled',window.scrollY>20);
