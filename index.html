@@ -114,30 +114,38 @@ nav.scrolled{
 }
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 
-/* ── CHART CANVAS ── */
-.hero-chart{
-  position:absolute;right:0;bottom:0;width:65%;height:75%;
-  z-index:1;pointer-events:none;opacity:0.18;
+/* ── BIRDEYE CHART ── */
+.hero-chart-frame{
+  position:absolute;right:0;top:0;width:62%;height:calc(100% - 32px);
+  z-index:1;pointer-events:none;
+  opacity:0.28;
+  filter:saturate(0.6) hue-rotate(220deg) brightness(0.7);
+  overflow:hidden;
+}
+.hero-chart-frame iframe{
+  width:100%;height:100%;border:none;
+  transform:scale(1.05);transform-origin:top right;
 }
 /* Ticker bar */
 .hero-ticker{
-  position:absolute;bottom:0;left:0;right:0;z-index:4;
-  height:32px;background:rgba(0,0,0,0.4);
-  border-top:1px solid rgba(153,69,255,0.2);
+  position:absolute;bottom:0;left:0;right:0;z-index:5;
+  height:32px;background:rgba(4,1,12,0.75);
+  backdrop-filter:blur(8px);
+  border-top:1px solid rgba(153,69,255,0.25);
   display:flex;align-items:center;overflow:hidden;
 }
 .ticker-track{
-  display:flex;gap:48px;
-  animation:ticker-scroll 28s linear infinite;
+  display:flex;gap:40px;
+  animation:ticker-scroll 35s linear infinite;
   white-space:nowrap;padding-left:100%;
 }
 @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{
-  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
-  letter-spacing:0.08em;display:flex;align-items:center;gap:8px;
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  letter-spacing:0.1em;display:flex;align-items:center;gap:7px;
 }
-.ticker-sym{color:rgba(255,255,255,0.5)}
-.ticker-price{color:#fff}
+.ticker-sym{color:rgba(255,255,255,0.4)}
+.ticker-price{color:rgba(255,255,255,0.9)}
 .ticker-up{color:#14F195}
 .ticker-down{color:#FF4444}
 
@@ -622,8 +630,10 @@ footer{
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-ghost">ARENA</div>
-  <!-- Candlestick chart background -->
-  <canvas class="hero-chart" id="heroChart"></canvas>
+  <!-- Birdeye live chart background -->
+  <div class="hero-chart-frame">
+    <iframe src="https://birdeye.so/tv-widget/So11111111111111111111111111111111111111112?chain=solana&viewMode=pair&chartInterval=15&chartType=CANDLE&chartTimezone=UTC&chartLeftToolbar=hide&theme=dark" loading="lazy" title="SOL/USDC chart"></iframe>
+  </div>
   <div class="hero-ground"></div>
   <div class="hero-char">
     <img src="images/strategist.webp" alt="Strategist Agent">
@@ -653,21 +663,7 @@ footer{
   <!-- Ticker -->
   <div class="hero-ticker">
     <div class="ticker-track" id="tickerTrack">
-      <span class="ticker-item"><span class="ticker-sym">SOL/USDC</span><span class="ticker-price" id="t-sol">$148.32</span><span class="ticker-up" id="t-sol-d">+4.21%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">BTC/USDC</span><span class="ticker-price">$84,201</span><span class="ticker-up">+1.87%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">ETH/USDC</span><span class="ticker-price">$1,612</span><span class="ticker-down">-0.94%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">JUP/SOL</span><span class="ticker-price">$0.412</span><span class="ticker-up">+6.33%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">WIF/USDC</span><span class="ticker-price">$1.04</span><span class="ticker-down">-2.11%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">BONK/USDC</span><span class="ticker-price">$0.0000214</span><span class="ticker-up">+11.4%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">PYTH/SOL</span><span class="ticker-price">$0.188</span><span class="ticker-up">+3.05%</span></span>
-      <!-- duplicate for seamless loop -->
-      <span class="ticker-item"><span class="ticker-sym">SOL/USDC</span><span class="ticker-price">$148.32</span><span class="ticker-up">+4.21%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">BTC/USDC</span><span class="ticker-price">$84,201</span><span class="ticker-up">+1.87%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">ETH/USDC</span><span class="ticker-price">$1,612</span><span class="ticker-down">-0.94%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">JUP/SOL</span><span class="ticker-price">$0.412</span><span class="ticker-up">+6.33%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">WIF/USDC</span><span class="ticker-price">$1.04</span><span class="ticker-down">-2.11%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">BONK/USDC</span><span class="ticker-price">$0.0000214</span><span class="ticker-up">+11.4%</span></span>
-      <span class="ticker-item"><span class="ticker-sym">PYTH/SOL</span><span class="ticker-price">$0.188</span><span class="ticker-up">+3.05%</span></span>
+      <!-- Populated by JS from Jupiter price API -->
     </div>
   </div>
 </section>
@@ -896,83 +892,68 @@ footer{
 </footer>
 
 <script>
-// ── Candlestick chart canvas ──
+// ── Live ticker from Jupiter price API ──
 (function(){
-  const canvas = document.getElementById('heroChart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H, candles = [];
+  const TOKENS = [
+    {id:'So11111111111111111111111111111111111111112', sym:'SOL'},
+    {id:'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', sym:'USDC'},
+    {id:'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', sym:'JUP'},
+    {id:'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', sym:'WIF'},
+    {id:'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', sym:'BONK'},
+    {id:'HZ1JovNiVvGrwvJnpUvida8mPCEDHNtEoANa1DvfZPUF', sym:'PYTH'},
+  ];
+  const BTC_ID = 'bitcoin';
 
-  function resize(){
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-    buildCandles();
+  let prevPrices = {};
+
+  function fmt(n){
+    if(n>=1000) return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+    if(n>=1)    return '$'+n.toFixed(3);
+    if(n>=0.01) return '$'+n.toFixed(4);
+    return '$'+n.toFixed(8);
   }
 
-  function buildCandles(){
-    candles = [];
-    const n = Math.floor(W / 22);
-    let price = 148;
-    for(let i=0;i<n;i++){
-      const open  = price;
-      const move  = (Math.random()-0.44)*6;
-      const close = Math.max(80, open + move);
-      const high  = Math.max(open,close) + Math.random()*3;
-      const low   = Math.min(open,close) - Math.random()*3;
-      candles.push({open,close,high,low});
-      price = close;
+  function renderTicker(items){
+    const track = document.getElementById('tickerTrack');
+    if(!track) return;
+    const doubled = [...items,...items];
+    track.innerHTML = doubled.map(t=>{
+      const cls   = t.change >= 0 ? 'ticker-up' : 'ticker-down';
+      const sign  = t.change >= 0 ? '+' : '';
+      return `<span class="ticker-item"><span class="ticker-sym">${t.sym}/USDC</span><span class="ticker-price">${fmt(t.price)}</span><span class="${cls}">${sign}${t.change.toFixed(2)}%</span></span>`;
+    }).join('');
+  }
+
+  async function fetchPrices(){
+    try{
+      const ids = TOKENS.map(t=>t.id).join(',');
+      const [jupRes, cgRes] = await Promise.all([
+        fetch(`https://price.jup.ag/v6/price?ids=${ids}`),
+        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true`)
+      ]);
+      const jupData = await jupRes.json();
+      const cgData  = await cgRes.json();
+
+      const items = TOKENS.map(t=>{
+        const p = jupData.data?.[t.id];
+        const price  = p?.price || 0;
+        const prev   = prevPrices[t.id] || price;
+        const change = prev ? ((price-prev)/prev)*100 : 0;
+        prevPrices[t.id] = price;
+        return {sym:t.sym, price, change};
+      }).filter(t=>t.price>0);
+
+      if(cgData.bitcoin) items.unshift({sym:'BTC', price:cgData.bitcoin.usd, change:cgData.bitcoin.usd_24h_change||0});
+      if(cgData.ethereum) items.splice(1,0,{sym:'ETH', price:cgData.ethereum.usd, change:cgData.ethereum.usd_24h_change||0});
+
+      renderTicker(items);
+    } catch(e){
+      console.warn('Ticker fetch failed',e);
     }
   }
 
-  function priceToY(p){ const min=70,max=180; return H - ((p-min)/(max-min)) * H * 0.8 - H*0.1; }
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    const cw=14, gap=8, total=cw+gap;
-    candles.forEach((c,i)=>{
-      const x = i*total + gap;
-      const bull = c.close >= c.open;
-      const col  = bull ? 'rgba(20,241,149,0.9)' : 'rgba(255,68,68,0.9)';
-      // wick
-      ctx.strokeStyle = col;
-      ctx.lineWidth   = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x+cw/2, priceToY(c.high));
-      ctx.lineTo(x+cw/2, priceToY(c.low));
-      ctx.stroke();
-      // body
-      const y1 = priceToY(Math.max(c.open,c.close));
-      const y2 = priceToY(Math.min(c.open,c.close));
-      const bh = Math.max(2, y2-y1);
-      ctx.fillStyle = col;
-      ctx.fillRect(x, y1, cw, bh);
-    });
-
-    // P&L curve overlay
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(153,69,255,0.5)';
-    ctx.lineWidth = 2;
-    candles.forEach((c,i)=>{
-      const x = i*(cw+gap)+gap+cw/2;
-      const y = priceToY(c.close);
-      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    });
-    ctx.stroke();
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-
-  // Subtle random tick animation
-  setInterval(()=>{
-    if(!candles.length) return;
-    const last = candles[candles.length-1];
-    last.close = Math.max(80, last.close + (Math.random()-0.48)*1.5);
-    last.high  = Math.max(last.high, last.close);
-    last.low   = Math.min(last.low, last.close);
-    draw();
-  }, 800);
+  fetchPrices();
+  setInterval(fetchPrices, 30000);
 })();
 
 // Nav glass on scroll
