@@ -49,7 +49,7 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
 .card.cb{border-color:rgba(0,194,255,0.22);background:rgba(0,194,255,0.04)}
 .card.cgold{border-color:rgba(255,209,102,0.22);background:rgba(255,209,102,0.04)}
 .cn{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:0.2em;color:rgba(255,255,255,0.2);margin-bottom:12px}
-.ct{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px}
+.ct{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;text-transform:uppercase;margin-bottom:8px}
 .ctp{color:var(--p)}.cto{color:var(--o)}.ctg{color:var(--g)}
 .cb2{font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:10px}
 .tag{display:inline-block;padding:3px 10px;margin-bottom:8px;font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.15em;border-radius:1px}
@@ -79,7 +79,7 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
 .table tr.hl2 td:first-child{color:var(--p)}
 .chk{color:var(--g);font-size:14px;font-weight:700}.dsh{color:rgba(255,255,255,0.18)}
 .fw{display:flex;align-items:center;flex-wrap:nowrap;margin:0 auto 20px}
-.fwn{padding:10px 16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);font-size:11px;font-weight:600;color:rgba(255,255,255,0.7);white-space:nowrap;flex-shrink:0}
+.fwn{padding:12px 20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);white-space:nowrap;flex-shrink:0}
 .fwn.end{border-color:rgba(20,241,149,0.3);color:var(--g)}
 .fwa{color:rgba(20,241,149,0.5);font-size:15px;padding:0 3px}
 .callout{padding:12px 16px;background:rgba(153,69,255,0.07);border:1px solid rgba(153,69,255,0.25);border-radius:2px}
@@ -231,9 +231,9 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
     <div class="eyebrow">Three Layers. One Loop.</div>
     <div class="h2">Every layer feeds<br><span class="acc-p">the next.</span></div>
     <div class="cols3">
-      <div class="card cp"><div class="cn">01 / PRO</div><div class="ct ctp">Pro</div><div class="cb2">A coordinated agent team managing your entire portfolio 24/7 — strategist, risk manager, scouts, executors. All sharing the same brain.</div><div class="list"><div class="li"><div class="dot dotp"></div>Perps, Trenches, Yield, LP</div><div class="li"><div class="dot dotp"></div>Natural language config</div><div class="li"><div class="dot dotp"></div>Human approval gates via Telegram</div></div></div>
-      <div class="card co"><div class="cn">02 / ARENA</div><div class="ct cto">Arena</div><div class="cb2">Head-to-head battles. Real capital. On-chain P&L. Every match generates verified training data that flows back into the system.</div><div class="list"><div class="li"><div class="dot doto"></div>1v1 Duel, Tournament, Gauntlet</div><div class="li"><div class="dot doto"></div>On-chain settlement, no admin key</div><div class="li"><div class="dot doto"></div>Immutable performance record</div></div></div>
-      <div class="card cg"><div class="cn">03 / MARKETPLACE</div><div class="ct ctg">Marketplace</div><div class="cb2">Sell proven strategies. Open vaults for allocators. Arena track record is the only listing requirement — no backtests, no claims.</div><div class="list"><div class="li"><div class="dot dotg"></div>On-chain prop trading via vaults</div><div class="li"><div class="dot dotg"></div>Revenue share for creators</div><div class="li"><div class="dot dotg"></div>Performance-only listings</div></div></div>
+      <div class="card cp"><div class="cn">01 / PRO</div><div class="ct ctp">Pro</div><div class="cb2">A coordinated agent team managing your entire portfolio 24/7 — strategist, risk manager, scouts, executors. All sharing the same brain.</div></div>
+      <div class="card co"><div class="cn">02 / ARENA</div><div class="ct cto">Arena</div><div class="cb2">Head-to-head battles. Real capital. On-chain P&L. Every match generates verified training data that flows back into the system.</div></div>
+      <div class="card cg"><div class="cn">03 / MARKETPLACE</div><div class="ct ctg">Marketplace</div><div class="cb2">Sell proven strategies. Open vaults for allocators. Arena track record is the only listing requirement — no backtests, no claims.</div></div>
     </div>
   </div>
   <div class="snum">03 / 14</div>
@@ -320,11 +320,11 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
       <div class="stat sg"><div class="sn" style="color:var(--g)">24/7</div><div class="sl">Always Active</div></div>
       <div class="stat"><div class="sn">4</div><div class="sl">DeFi Terminals</div></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:5px;max-width:360px">
-      <div class="card cp" style="padding:9px 13px"><div style="font-size:11px;font-weight:700;color:var(--p)">Portfolio Strategist — coordinates all agents</div></div>
-      <div class="card" style="padding:9px 13px;border-color:rgba(255,154,64,0.2)"><div style="font-size:11px;font-weight:700;color:var(--o)">Risk Manager — exposure limits, liquidation protection</div></div>
-      <div class="card cg" style="padding:9px 13px"><div style="font-size:11px;font-weight:700;color:var(--g)">Market Scout — mempool signals, whale moves, LP</div></div>
-      <div class="card cb" style="padding:9px 13px"><div style="font-size:11px;font-weight:700;color:var(--b)">Executors — Perps · LP · Yield · Sniper</div></div>
+    <div class="list" style="max-width:360px">
+      <div class="li"><div class="dot dotp"></div><span style="font-size:14px;font-weight:700;color:var(--p)">Portfolio Strategist</span> — coordinates all agents</div>
+      <div class="li"><div class="dot doto"></div><span style="font-size:14px;font-weight:700;color:var(--o)">Risk Manager</span> — exposure limits, liquidation protection</div>
+      <div class="li"><div class="dot dotg"></div><span style="font-size:14px;font-weight:700;color:var(--g)">Market Scout</span> — mempool signals, whale moves, LP</div>
+      <div class="li"><div class="dot dotb"></div><span style="font-size:14px;font-weight:700;color:var(--b)">Executors</span> — Perps · LP · Yield · Sniper</div>
     </div>
   </div>
   <div class="snum">06 / 14</div>
@@ -367,9 +367,9 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
     <div class="eyebrow green">03 / Marketplace</div>
     <div class="h2">Arena record =<br><span class="acc-g">revenue stream.</span></div>
     <div class="cols3" style="max-width:560px">
-      <div class="card cg"><div class="cn">PATH 01</div><div class="ct ctg" style="font-size:15px">Sell Agents</div><div class="cb2">Monthly recurring. Arena track record is the only listing requirement — no backtests accepted.</div><div class="chips"><span class="chip chipg" style="font-size:8px">Recurring</span></div></div>
-      <div class="card cg"><div class="cn">PATH 02</div><div class="ct ctg" style="font-size:15px">Sell Strategies</div><div class="cb2">Natural language configs. Verified performance only. Performance is the marketing.</div><div class="chips"><span class="chip chipg" style="font-size:8px">Volume Play</span></div></div>
-      <div class="card cg"><div class="cn">PATH 03</div><div class="ct ctg" style="font-size:15px">Open a Vault</div><div class="cb2">Let allocators fund your agent. Earn performance fees. Non-custodial. On-chain settlement.</div><div class="chips"><span class="chip chipg" style="font-size:8px">Prop Trading</span></div></div>
+      <div class="card cg"><div class="cn">PATH 01</div><div class="ct ctg" style="font-size:15px">Sell Agents</div><div class="cb2">Monthly recurring. Arena track record is the only listing requirement — no backtests accepted.</div></div>
+      <div class="card cg"><div class="cn">PATH 02</div><div class="ct ctg" style="font-size:15px">Sell Strategies</div><div class="cb2">Natural language configs. Verified performance only. Performance is the marketing.</div></div>
+      <div class="card cg"><div class="cn">PATH 03</div><div class="ct ctg" style="font-size:15px">Open a Vault</div><div class="cb2">Let allocators fund your agent. Earn performance fees. Non-custodial. On-chain settlement.</div></div>
     </div>
   </div>
   <div class="snum">08 / 14</div>
@@ -394,7 +394,7 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
       </div>
       <div class="callout" style="background:rgba(0,194,255,0.04);border-color:rgba(0,194,255,0.2)">
         <div class="cl" style="color:var(--b)">Category Validation</div>
-        <div class="ctext">Almanak raised $8.45M (Delphi Labs) for EVM AI agents with no Arena, no data loop, no Solana. The category is being funded. We're the Solana-native, data-first version.</div>
+        <div class="ctext">Almanak raised $8.45M (Delphi Labs) for EVM AI agents — no Arena, no data loop, no Solana. We're the version they can't build.</div>
       </div>
     </div>
   </div>
@@ -439,11 +439,7 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
       <div class="revrow"><div class="rname">Creator Economy</div><div class="rmodel">% take on all agent and strategy Marketplace transactions</div><div class="rtype rtake">Take Rate</div></div>
       <div class="revrow"><div class="rname">Vault Fees</div><div class="rmodel">% of returns on capital managed by top Arena agents</div><div class="rtype rperf">Performance</div></div>
     </div>
-    <div class="cols2" style="max-width:640px">
-      <div class="callout cg2">
-        <div class="cl">Zero CAC Discovery</div>
-        <div class="ctext">Free tier spectates Arena + browses Marketplace. Organic top-of-funnel built into the product — no paid acquisition needed to fill it.</div>
-      </div>
+    <div style="max-width:420px">
       <div class="callout cgold2">
         <div class="cl">Unit Economics (Target Year 2)</div>
         <div class="ctext">500 Pro subs at $150 avg = $900K ARR. Arena + Marketplace take = additive. Path to $5M ARR before Series A.</div>
@@ -493,7 +489,7 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
   <div class="slide-content">
     <div class="eyebrow" style="margin-bottom:8px">The Team</div>
     <div class="h2">Why us. Why now.<br><span class="acc-p">Why this market.</span></div>
-    <div class="cols3" style="margin-bottom:14px">
+    <div class="cols3" style="margin-bottom:12px">
       <div class="tc">
         <div class="av avk">K</div>
         <div class="fname">Kevin MacArthur</div>
@@ -512,6 +508,9 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
         <div class="frole ro">Infrastructure Partner</div>
         <div class="fbio">Solana-native RPC, DAS API, smart contracts, Arena settlement. Deep roots in the Solana core ecosystem. Not a vendor — co-building the settlement and data layer alongside us.</div>
       </div>
+    </div>
+    <div style="padding:11px 16px;background:rgba(20,241,149,0.04);border:1px solid rgba(20,241,149,0.14);max-width:820px">
+      <div style="font-size:13px;color:var(--dim)">One founder watched this gap form from inside the platform 95M traders rely on. One already built and won with the core infrastructure.</div>
     </div>
   </div>
   <div class="snum">13 / 14</div>
