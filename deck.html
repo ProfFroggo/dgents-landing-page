@@ -149,6 +149,38 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
 .mitem{font-size:11px;color:rgba(255,255,255,0.5)}
 .mitem strong{color:#fff}
 
+/* ─── TYPE SYSTEM CONSOLIDATION ─── */
+.traxlabel,.tln,.asklabel,.mperiod,.frole{
+  font-family:'Orbitron',monospace;
+  font-size:9px;font-weight:700;
+  letter-spacing:0.18em;
+  color:rgba(255,255,255,0.22);
+  text-transform:uppercase;
+  margin-bottom:6px
+}
+.traxlabel.lp{color:var(--p)}
+.traxlabel.lg{color:var(--g)}
+.traxlabel.lo{color:var(--o)}
+.traxlabel.lb{color:var(--b)}
+.traxhead,.fname,.tlper{
+  font-family:'Orbitron',monospace;
+  font-size:14px;font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  margin-bottom:6px;
+  color:#fff
+}
+.traxbody,.fbio,.tli,.askbody{
+  font-size:14px;
+  color:rgba(255,255,255,0.55);
+  line-height:1.6
+}
+.li{font-size:14px;color:rgba(255,255,255,0.5)}
+.rmodel{font-size:14px}
+.mitem{font-size:13px}
+.mitems{gap:14px;flex-direction:column}
+.cl{font-size:9px;letter-spacing:0.18em}
+
 @media print {
   @page { size: 1280px 720px; margin: 0; }
   html, body { overflow: visible !important; height: auto !important; }
@@ -251,19 +283,16 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
         <div class="cn">01 / Infrastructure</div>
         <div class="ct cto" style="font-size:14px">Rails Exist</div>
         <div class="cb2">Solana crossed the performance threshold for real-time agent execution. Sub-400ms finality. $9.2B DeFi TVL at all-time high. The chain can handle what we're building.</div>
-        <div class="chips"><span class="chip chipo" style="font-size:8px">Solana ATH</span></div>
       </div>
       <div class="card co">
         <div class="cn">02 / Intelligence</div>
         <div class="ct cto" style="font-size:14px">AI Can Execute</div>
         <div class="cb2">For the first time in 2025, LLMs can execute multi-step trading decisions autonomously — not just generate text about them. The intelligence gap closed.</div>
-        <div class="chips"><span class="chip chipo" style="font-size:8px">LLM Capability Leap</span></div>
       </div>
       <div class="card co">
         <div class="cn">03 / Data</div>
         <div class="ct cto" style="font-size:14px">Layer Is Empty</div>
         <div class="cb2">21,000+ AI agents competed at Colosseum's last hackathon. Every single one trained on static, generic data with a cutoff date. Nobody has built the training infrastructure.</div>
-        <div class="chips"><span class="chip chipo" style="font-size:8px">First Mover</span></div>
       </div>
     </div>
     <div class="callout cgold2" style="max-width:640px;margin:0 auto">
@@ -392,8 +421,8 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
         <div class="cl">SAM — Solana Active Traders</div>
         <div class="ctext">~500K active Solana wallets trading DeFi monthly. At $75–200/mo per Pro subscriber, the immediate addressable market is $450M–$1.2B ARR.</div>
       </div>
-      <div class="callout" style="background:rgba(0,194,255,0.04);border-color:rgba(0,194,255,0.2)">
-        <div class="cl" style="color:var(--b)">Category Validation</div>
+      <div class="callout cg2">
+        <div class="cl">Category Validation</div>
         <div class="ctext">Almanak raised $8.45M (Delphi Labs) for EVM AI agents — no Arena, no data loop, no Solana. We're the version they can't build.</div>
       </div>
     </div>
@@ -494,19 +523,19 @@ body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
         <div class="av avk">K</div>
         <div class="fname">Kevin MacArthur</div>
         <div class="frole rp">Co-Founder · Growth &amp; Strategy</div>
-        <div class="fbio">Head of Onchain Growth at Bitso. Part of the CoinMarketCap AI founding team — watched this training data gap form from inside the platform 95M traders use. Advising Carbium.io and Safirum.ag on Solana go-to-market.</div>
+        <div class="fbio">Part of the CoinMarketCap AI founding team — watched this data gap form from inside the platform 95M traders use. Head of Onchain Growth at Bitso, advising Carbium.io and Safirum.ag.</div>
       </div>
       <div class="tc">
         <div class="av avt">T</div>
         <div class="fname">Tayler Melvin</div>
         <div class="frole rg">Co-Founder · Engineering</div>
-        <div class="fbio">Won Colosseum AI Agent Hackathon, Feb 2026, with DegenDome — Arena's direct predecessor. Arena is his second build on this exact infrastructure, not his first. Onchain Marketing Lead at Bitso.</div>
+        <div class="fbio">Won Colosseum AI Agent Hackathon Feb 2026 with DegenDome — Arena's direct predecessor. Arena is his second build on this exact infrastructure, not his first.</div>
       </div>
       <div class="tc">
         <div class="av avc">C</div>
         <div class="fname">Carbium</div>
         <div class="frole ro">Infrastructure Partner</div>
-        <div class="fbio">Solana-native RPC, DAS API, smart contracts, Arena settlement. Deep roots in the Solana core ecosystem. Not a vendor — co-building the settlement and data layer alongside us.</div>
+        <div class="fbio">Solana-native RPC, DAS API, and Arena settlement programs. Deep roots in the Solana ecosystem — co-building the data layer alongside us.</div>
       </div>
     </div>
     <div style="padding:11px 16px;background:rgba(20,241,149,0.04);border:1px solid rgba(20,241,149,0.14);max-width:820px">
