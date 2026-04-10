@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dgents.ai — Investor Deck v6 | Seed Round 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#9945FF;--g:#14F195;--b:#00C2FF;--gold:#FFD166;--bg:#0A0414;--dim:rgba(255,255,255,0.55);--o:#FF9A40}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif}
+.deck-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,4,20,0.85);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,0.07)}
+.nav-logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;background:linear-gradient(135deg,#fff,rgba(255,255,255,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.04em}
+.nav-counter{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.2em}
+.nav-title{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,0.28);letter-spacing:0.06em;text-transform:uppercase;text-align:center}
+.nav-controls{display:flex;gap:8px}
+.nav-arrow{width:36px;height:36px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;transition:all 0.15s;font-size:14px}
+.nav-arrow:hover{border-color:var(--p);color:#fff;background:rgba(153,69,255,0.12)}
+.nav-arrow:disabled{opacity:0.25;cursor:default}
+.slides-wrap{position:fixed;top:56px;left:0;right:0;bottom:0;overflow:hidden}
+.slide{display:none;position:absolute;inset:0;padding:52px 80px;overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.slide-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.slide-content{position:relative;z-index:1}
+.ghost{position:absolute;font-family:'Orbitron',monospace;font-size:clamp(80px,14vw,220px);font-weight:900;color:transparent;pointer-events:none;z-index:0;white-space:nowrap;user-select:none;line-height:0.9}
+.slide-char{position:absolute;bottom:0;right:0;height:90%;width:auto;max-width:44%;object-fit:contain;object-position:bottom right;pointer-events:none;z-index:0}
+.slide-char.fighter{filter:drop-shadow(0 0 80px rgba(255,80,0,0.2))}
+.slide-char.scout{filter:drop-shadow(0 0 80px rgba(20,241,149,0.2))}
+.slide-char.strategist{filter:drop-shadow(0 0 80px rgba(153,69,255,0.25))}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;margin-bottom:18px;background:rgba(153,69,255,0.1);border:1px solid rgba(153,69,255,0.3);color:var(--p);font-size:10px;font-weight:700;font-family:'Orbitron',monospace;letter-spacing:0.18em;text-transform:uppercase;border-radius:2px}
+.eyebrow.green{background:rgba(20,241,149,0.08);border-color:rgba(20,241,149,0.3);color:var(--g)}
+.eyebrow.orange{background:rgba(255,154,64,0.08);border-color:rgba(255,154,64,0.3);color:var(--o)}
+.eyebrow.gold{background:rgba(255,209,102,0.1);border-color:rgba(255,209,102,0.3);color:var(--gold)}
+.eyebrow.blue{background:rgba(0,194,255,0.08);border-color:rgba(0,194,255,0.25);color:var(--b)}
+.h1{font-family:'Orbitron',monospace;font-size:clamp(48px,6vw,90px);font-weight:900;line-height:0.9;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px}
+.h2{font-family:'Orbitron',monospace;font-size:clamp(26px,3.5vw,48px);font-weight:900;line-height:1.0;letter-spacing:-0.01em;text-transform:uppercase;margin-bottom:14px}
+.acc-p{background:linear-gradient(135deg,#C77DFF,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.acc-g{background:linear-gradient(135deg,#14F195,#00C2FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.acc-o{background:linear-gradient(135deg,#FFD166,#FF9A40);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.body{font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.7;color:var(--dim);max-width:520px;margin-bottom:24px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card{padding:20px 18px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07)}
+.card.cp{border-color:rgba(153,69,255,0.22);background:rgba(153,69,255,0.04)}
+.card.cg{border-color:rgba(20,241,149,0.22);background:rgba(20,241,149,0.04)}
+.card.co{border-color:rgba(255,154,64,0.22);background:rgba(255,154,64,0.04)}
+.card.cb{border-color:rgba(0,194,255,0.22);background:rgba(0,194,255,0.04)}
+.card.cgold{border-color:rgba(255,209,102,0.22);background:rgba(255,209,102,0.04)}
+.cn{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:0.2em;color:rgba(255,255,255,0.2);margin-bottom:12px}
+.ct{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:8px}
+.ctp{color:var(--p)}.cto{color:var(--o)}.ctg{color:var(--g)}
+.cb2{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:10px}
+.tag{display:inline-block;padding:3px 10px;margin-bottom:8px;font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.15em;border-radius:1px}
+.tagp{background:rgba(153,69,255,0.12);color:var(--p);border:1px solid rgba(153,69,255,0.25)}
+.tago{background:rgba(255,123,0,0.1);color:var(--o);border:1px solid rgba(255,123,0,0.2)}
+.tagg{background:rgba(20,241,149,0.08);color:var(--g);border:1px solid rgba(20,241,149,0.2)}
+.list{display:flex;flex-direction:column;gap:6px}
+.li{display:flex;gap:9px;font-size:11px;color:rgba(255,255,255,0.42);line-height:1.5}
+.dot{width:4px;height:4px;flex-shrink:0;border-radius:50%;margin-top:4px}
+.dotp{background:var(--p)}.doto{background:var(--o)}.dotg{background:var(--g)}.dotb{background:var(--b)}
+.stats{display:flex;gap:10px;margin-bottom:20px}
+.stat{padding:11px 16px;background:rgba(153,69,255,0.07);border:1px solid rgba(153,69,255,0.18);border-radius:2px}
+.stat.sg{background:rgba(20,241,149,0.06);border-color:rgba(20,241,149,0.2)}
+.stat.so{background:rgba(255,154,64,0.07);border-color:rgba(255,154,64,0.2)}
+.sn{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--p);line-height:1;margin-bottom:2px}
+.stat.sg .sn{color:var(--g)}.stat.so .sn{color:var(--o)}
+.sl{font-size:10px;color:rgba(255,255,255,0.28);letter-spacing:0.06em}
+.qblock{padding:18px 22px;border-left:2px solid var(--g);background:rgba(20,241,149,0.04);margin-bottom:20px}
+.qt{font-family:'Space Grotesk',sans-serif;font-size:clamp(16px,2vw,24px);font-weight:600;line-height:1.3;color:#fff}
+.qt .hl{background:linear-gradient(135deg,var(--g),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.table{width:100%;border-collapse:collapse}
+.table th{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left}
+.table th:first-child{color:rgba(255,255,255,0.2)}
+.table td{padding:10px 12px;font-size:12px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+.table td:first-child{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:#fff;letter-spacing:0.04em}
+.table tr.hl2 td{background:rgba(153,69,255,0.06)}
+.table tr.hl2 td:first-child{color:var(--p)}
+.chk{color:var(--g);font-size:14px;font-weight:700}.dsh{color:rgba(255,255,255,0.18)}
+.fw{display:flex;align-items:center;flex-wrap:nowrap;margin:0 auto 20px}
+.fwn{padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);font-size:11px;font-weight:600;color:rgba(255,255,255,0.7);white-space:nowrap;flex-shrink:0}
+.fwn.end{border-color:rgba(20,241,149,0.3);color:var(--g)}
+.fwa{color:rgba(20,241,149,0.5);font-size:15px;padding:0 3px}
+.callout{padding:12px 16px;background:rgba(153,69,255,0.07);border:1px solid rgba(153,69,255,0.25);border-radius:2px}
+.callout.cg2{background:rgba(20,241,149,0.06);border-color:rgba(20,241,149,0.2)}
+.callout.cgold2{background:rgba(255,209,102,0.07);border-color:rgba(255,209,102,0.3)}
+.callout.co2{background:rgba(255,154,64,0.06);border-color:rgba(255,154,64,0.25)}
+.cl{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.18em;color:var(--p);text-transform:uppercase;margin-bottom:4px}
+.callout.cg2 .cl{color:var(--g)}.callout.cgold2 .cl{color:var(--gold)}.callout.co2 .cl{color:var(--o)}
+.ctext{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--dim);line-height:1.5}
+.tc{padding:22px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07)}
+.av{width:36px;height:36px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:15px;font-weight:900;margin-bottom:12px}
+.avk{background:linear-gradient(135deg,rgba(153,69,255,0.3),rgba(0,194,255,0.2));border:1px solid rgba(153,69,255,0.4)}
+.avt{background:linear-gradient(135deg,rgba(20,241,149,0.2),rgba(0,194,255,0.2));border:1px solid rgba(20,241,149,0.35)}
+.avc{background:linear-gradient(135deg,rgba(255,154,64,0.2),rgba(153,69,255,0.2));border:1px solid rgba(255,154,64,0.3)}
+.fname{font-family:'Orbitron',monospace;font-size:12px;font-weight:800;margin-bottom:2px;letter-spacing:0.02em}
+.frole{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+.rp{color:var(--p)}.rg{color:var(--g)}.ro{color:var(--o)}
+.fbio{font-size:11px;color:var(--dim);line-height:1.6}
+.tl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+.tlp{padding:18px 16px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07)}
+.tlp.act{background:rgba(153,69,255,0.06);border-color:rgba(153,69,255,0.25)}
+.tln{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.2em;color:var(--p);margin-bottom:5px}
+.tlper{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#fff;margin-bottom:8px}
+.tlis{display:flex;flex-direction:column;gap:5px}
+.tli{font-size:11px;color:var(--dim);display:flex;gap:7px}
+.tld{width:3px;height:3px;border-radius:50%;background:var(--p);flex-shrink:0;margin-top:4px}
+.revrows{display:flex;flex-direction:column;gap:2px;margin-bottom:14px}
+.revrow{padding:12px 16px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);display:grid;grid-template-columns:1fr 1.8fr 1fr;align-items:center;gap:14px}
+.rname{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.04em}
+.rmodel{font-size:12px;color:var(--dim)}
+.rtype{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;padding:3px 9px;border-radius:1px;text-align:center;letter-spacing:0.1em}
+.rsub{background:rgba(153,69,255,0.12);color:var(--p);border:1px solid rgba(153,69,255,0.2)}
+.rtx{background:rgba(20,241,149,0.08);color:var(--g);border:1px solid rgba(20,241,149,0.2)}
+.rtake{background:rgba(255,209,102,0.1);color:var(--gold);border:1px solid rgba(255,209,102,0.2)}
+.rperf{background:rgba(0,194,255,0.08);color:var(--b);border:1px solid rgba(0,194,255,0.2)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.chip{padding:5px 11px;border-radius:2px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:0.1em}
+.chipp{background:rgba(153,69,255,0.1);border:1px solid rgba(153,69,255,0.3);color:var(--p)}
+.chipg{background:rgba(20,241,149,0.08);border:1px solid rgba(20,241,149,0.25);color:var(--g)}
+.chipb{background:rgba(0,194,255,0.08);border:1px solid rgba(0,194,255,0.22);color:var(--b)}
+.chipo{background:rgba(255,154,64,0.1);border:1px solid rgba(255,154,64,0.28);color:var(--o)}
+.snum{position:absolute;bottom:16px;right:32px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:rgba(255,255,255,0.12);letter-spacing:0.18em}
+.pbar{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(to right,var(--p),var(--g));transition:width 0.3s ease;z-index:300}
+.trax{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.traxcard{padding:16px 18px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;gap:6px}
+.traxcard.tp{border-color:rgba(153,69,255,0.22);background:rgba(153,69,255,0.04)}
+.traxcard.tg{border-color:rgba(20,241,149,0.22);background:rgba(20,241,149,0.04)}
+.traxcard.to{border-color:rgba(255,154,64,0.22);background:rgba(255,154,64,0.04)}
+.traxcard.tb{border-color:rgba(0,194,255,0.22);background:rgba(0,194,255,0.04)}
+.traxlabel{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.2em;color:rgba(255,255,255,0.25);text-transform:uppercase}
+.traxlabel.lp{color:var(--p)}.traxlabel.lg{color:var(--g)}.traxlabel.lo{color:var(--o)}.traxlabel.lb{color:var(--b)}
+.traxhead{font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:#fff;letter-spacing:0.02em}
+.traxbody{font-size:11px;color:var(--dim);line-height:1.55}
+.askgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px}
+.askbox{padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08)}
+.askbox.ap{border-color:rgba(153,69,255,0.3);background:rgba(153,69,255,0.04)}
+.askbox.ag{border-color:rgba(20,241,149,0.25);background:rgba(20,241,149,0.03)}
+.asklabel{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.2em;color:rgba(255,255,255,0.25);text-transform:uppercase;margin-bottom:8px}
+.askamt{font-family:'Orbitron',monospace;font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1;margin-bottom:6px}
+.askbody{font-size:12px;color:var(--dim);line-height:1.6}
+.milestone{display:flex;flex-direction:column;gap:5px;padding:14px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-left:2px solid var(--p)}
+.milestone.mg{border-left-color:var(--g)}
+.milestone.mb{border-left-color:var(--b)}
+.mperiod{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:0.18em;color:var(--p);text-transform:uppercase;margin-bottom:3px}
+.milestone.mg .mperiod{color:var(--g)}.milestone.mb .mperiod{color:var(--b)}
+.mitems{display:flex;gap:12px;flex-wrap:wrap}
+.mitem{font-size:11px;color:rgba(255,255,255,0.5)}
+.mitem strong{color:#fff}
+
+@media print {
+  @page { size: 1280px 720px; margin: 0; }
+  html, body { overflow: visible !important; height: auto !important; }
+  .deck-nav, .pbar, .nav-arrow { display: none !important; }
+  .slides-wrap { position: static !important; overflow: visible !important; }
+  .slide { display: flex !important; position: relative !important;
+    width: 1280px !important; height: 720px !important;
+    page-break-after: always; break-after: page;
+    overflow: hidden !important; }
+  .slide-char { position: absolute !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+<div class="deck-nav">
+  <div class="nav-logo">dgents.ai</div>
+  <div><div class="nav-counter" id="navCounter">01 / 14</div><div class="nav-title" id="navTitle"></div></div>
+  <div class="nav-controls">
+    <button class="nav-arrow" onclick="window.print()" title="Export PDF" style="font-size:11px;font-family:Inter,sans-serif;width:auto;padding:0 12px;letter-spacing:0.04em">PDF</button>
+    <button class="nav-arrow" id="btnPrev" onclick="go(-1)">&#8592;</button>
+    <button class="nav-arrow" id="btnNext" onclick="go(1)">&#8594;</button>
+  </div>
+</div>
+<div class="pbar" id="pbar"></div>
+<div class="slides-wrap">
+
+<!-- 1 COVER -->
+<div class="slide active" id="slide-1">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 100% at 70% 60%,rgba(120,40,230,0.5) 0%,transparent 55%),radial-gradient(ellipse 60% 80% at 80% 100%,rgba(80,10,160,0.35) 0%,transparent 60%),linear-gradient(160deg,#0A0414 0%,#150828 40%,#1A0535 70%,#0A0414 100%)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(153,69,255,0.1);right:-4%;top:50%;transform:translateY(-50%)">ARENA</div>
+  <img class="slide-char" src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtYWxsLWNoYXJhY3RlcnMtaGVyby5wbmc=" alt="" style="height:100%;max-width:52%;top:50%;bottom:auto;transform:translateY(-50%);right:-2%;filter:drop-shadow(0 0 100px rgba(153,69,255,0.25));object-fit:contain;object-position:center">
+  <div class="slide-content" style="max-width:56%">
+    <div class="h1" style="font-size:clamp(52px,7.5vw,108px);margin-bottom:14px">Making<br>Solana<br><span class="acc-g">Fully Agentic.</span></div>
+    <p class="body" style="max-width:400px">The coordination and training data layer for Solana DeFi. AI agents that think together, learn from every decision, and prove their edge on-chain.</p>
+    <div class="chips">
+      <span class="chip chipp">Solana Native</span><span class="chip chipg">Multi-Agent</span><span class="chip chipb">Data Flywheel</span><span class="chip chipo">Creator Economy</span>
+    </div>
+  </div>
+  <div class="snum">01 / 14</div>
+</div>
+
+<!-- 2 PROBLEM -->
+<div class="slide" id="slide-2">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 70% 90% at 20% 50%,rgba(200,50,0,0.08) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#120318)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(255,100,50,0.1);left:-3%;top:50%;transform:translateY(-48%)">PROBLEM</div>
+  <div class="slide-content">
+    <div class="eyebrow orange">The Problem</div>
+    <div class="h2">The coordination gap<br><span class="acc-o">costs real money.</span></div>
+    <div class="cols3" style="margin-top:8px">
+      <div class="card co">
+        <div class="cn">01</div>
+        <div class="ct cto" style="font-size:15px">Fragmented</div>
+        <div class="cb2">Perps, memecoins, LP, yield — 4+ active positions across 3+ separate protocols. No shared brain. No shared state.</div>
+      </div>
+      <div class="card co">
+        <div class="cn">02</div>
+        <div class="ct cto" style="font-size:15px">Blind</div>
+        <div class="cb2">Your sniper just bought. Your LP started IL'ing. Your perps hit 80% margin. Three systems. Zero awareness of each other.</div>
+      </div>
+      <div class="card co">
+        <div class="cn">03</div>
+        <div class="ct cto" style="font-size:15px">Outgunned</div>
+        <div class="cb2">The traders who don't miss these moves do this full-time, with teams. Retail has no equivalent — until now.</div>
+      </div>
+    </div>
+    <div class="callout co2" style="margin-top:16px;max-width:700px">
+      <div class="cl">The Core Failure</div>
+      <div class="ctext">$9.2B in Solana DeFi TVL managed by traders whose tools have never been taught to coordinate — or to learn from their own decisions.</div>
+    </div>
+  </div>
+  <div class="snum">02 / 14</div>
+</div>
+
+<!-- 3 SOLUTION -->
+<div class="slide" id="slide-3">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 70% at 50% 40%,rgba(153,69,255,0.14) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#150828)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(153,69,255,0.1);left:-2%;top:50%;transform:translateY(-50%)">SOLUTION</div>
+  <div class="slide-content">
+    <div class="eyebrow">Three Layers. One Loop.</div>
+    <div class="h2" style="margin-bottom:18px">Every layer feeds<br><span class="acc-p">the next.</span></div>
+    <div class="cols3">
+      <div class="card cp"><div class="cn">01 / PRO</div><div class="tag tagp">Multi-Agent Terminal</div><div class="ct ctp">Pro</div><div class="cb2">A coordinated agent team managing your entire portfolio 24/7 — strategist, risk manager, scouts, executors. All sharing the same brain.</div><div class="list"><div class="li"><div class="dot dotp"></div>Perps, Trenches, Yield, LP</div><div class="li"><div class="dot dotp"></div>Natural language config</div><div class="li"><div class="dot dotp"></div>Human approval gates via Telegram</div></div></div>
+      <div class="card co"><div class="cn">02 / ARENA</div><div class="tag tago">The Proving Ground</div><div class="ct cto">Arena</div><div class="cb2">Head-to-head battles. Real capital. On-chain P&L. Every match generates verified training data that flows back into the system.</div><div class="list"><div class="li"><div class="dot doto"></div>1v1 Duel, Tournament, Gauntlet</div><div class="li"><div class="dot doto"></div>On-chain settlement, no admin key</div><div class="li"><div class="dot doto"></div>Immutable performance record</div></div></div>
+      <div class="card cg"><div class="cn">03 / MARKETPLACE</div><div class="tag tagg">Creator Economy</div><div class="ct ctg">Marketplace</div><div class="cb2">Sell proven strategies. Open vaults for allocators. Arena track record is the only listing requirement — no backtests, no claims.</div><div class="list"><div class="li"><div class="dot dotg"></div>On-chain prop trading via vaults</div><div class="li"><div class="dot dotg"></div>Revenue share for creators</div><div class="li"><div class="dot dotg"></div>Performance-only listings</div></div></div>
+    </div>
+  </div>
+  <div class="snum">03 / 14</div>
+</div>
+
+<!-- 4 WHY NOW -->
+<div class="slide" id="slide-4">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(255,154,64,0.07) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#1A0E04)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(255,154,64,0.1);left:50%;top:50%;transform:translate(-50%,-50%)">NOW</div>
+  <div class="slide-content" style="max-width:920px;margin:0 auto;text-align:center">
+    <div class="eyebrow orange" style="margin:0 auto 18px">Why Now</div>
+    <div class="h2" style="text-align:center;margin-bottom:28px">Three things just became<br><span class="acc-o">true at the same time.</span></div>
+    <div class="cols3" style="text-align:left;margin-bottom:20px">
+      <div class="card co">
+        <div class="cn">01 / Infrastructure</div>
+        <div class="ct cto" style="font-size:14px">Rails Exist</div>
+        <div class="cb2">Solana crossed the performance threshold for real-time agent execution. Sub-400ms finality. $9.2B DeFi TVL at all-time high. The chain can handle what we're building.</div>
+        <div class="chips"><span class="chip chipo" style="font-size:8px">Solana ATH</span></div>
+      </div>
+      <div class="card co">
+        <div class="cn">02 / Intelligence</div>
+        <div class="ct cto" style="font-size:14px">AI Can Execute</div>
+        <div class="cb2">For the first time in 2025, LLMs can execute multi-step trading decisions autonomously — not just generate text about them. The intelligence gap closed.</div>
+        <div class="chips"><span class="chip chipo" style="font-size:8px">LLM Capability Leap</span></div>
+      </div>
+      <div class="card co">
+        <div class="cn">03 / Data</div>
+        <div class="ct cto" style="font-size:14px">Layer Is Empty</div>
+        <div class="cb2">21,000+ AI agents competed at Colosseum's last hackathon. Every single one trained on static, generic data with a cutoff date. Nobody has built the training infrastructure.</div>
+        <div class="chips"><span class="chip chipo" style="font-size:8px">First Mover</span></div>
+      </div>
+    </div>
+    <div class="callout cgold2" style="max-width:640px;margin:0 auto">
+      <div class="cl">The Window</div>
+      <div class="ctext">When infrastructure, intelligence, and data converge simultaneously — the first mover advantage is permanent. The data moat compounds from day one.</div>
+    </div>
+  </div>
+  <div class="snum">04 / 14</div>
+</div>
+
+<!-- 5 DATA MOAT + FLYWHEEL (merged) -->
+<div class="slide" id="slide-5">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(20,241,149,0.06) 0%,transparent 60%),linear-gradient(160deg,#0A0414,#0E1A14)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(20,241,149,0.1);left:50%;top:50%;transform:translate(-50%,-50%)">DATA</div>
+  <div class="slide-content" style="max-width:820px;margin:0 auto">
+    <div class="eyebrow green" style="margin:0 auto 18px;display:inline-flex">The Moat</div>
+    <div class="qblock" style="max-width:640px;margin:0 auto 20px">
+      <div class="qt">"Anyone can build a bot.<br><span class="hl">Nobody can buy our data."</span></div>
+    </div>
+    <div class="cols2" style="max-width:620px;margin:0 auto 18px;text-align:left">
+      <div class="card" style="border-color:rgba(255,255,255,0.08)">
+        <div class="cn" style="color:rgba(255,100,50,0.5)">Every Competitor</div>
+        <div class="ct" style="font-size:13px;color:rgba(255,255,255,0.5)">Static Training Data</div>
+        <div class="cb2" style="font-size:12px">Web crawl. Cutoff date. Zero live DeFi signal. Same generic models for every platform, every user.</div>
+      </div>
+      <div class="card cg">
+        <div class="cn" style="color:var(--g)">dgents</div>
+        <div class="ct ctg" style="font-size:13px">Live Compounding Data</div>
+        <div class="cb2" style="font-size:12px">Real decisions. Real P&L. Verified on-chain. Every Arena match makes every agent smarter. It compounds indefinitely.</div>
+      </div>
+    </div>
+    <div class="fw" style="justify-content:center;max-width:700px;margin:0 auto">
+      <div class="fwn" style="font-size:10px">Traders Build Agents</div><div class="fwa">&#8594;</div>
+      <div class="fwn" style="font-size:10px">Agents Battle in Arena</div><div class="fwa">&#8594;</div>
+      <div class="fwn" style="font-size:10px">Platform Captures Decisions</div><div class="fwa">&#8594;</div>
+      <div class="fwn" style="font-size:10px">Data Trains All Agents</div><div class="fwa">&#8594;</div>
+      <div class="fwn end" style="font-size:10px">Repeat. Forever.</div>
+    </div>
+  </div>
+  <div class="snum">05 / 14</div>
+</div>
+
+<!-- 6 PRO -->
+<div class="slide" id="slide-6">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 70% 90% at 70% 50%,rgba(153,69,255,0.18) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#150828)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(153,69,255,0.12);right:-3%;top:50%;transform:translateY(-50%)">PRO</div>
+  <img class="slide-char strategist" src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtc3RyYXRlZ2lzdC12NS1jdXRvdXQucG5n" alt="">
+  <div class="slide-content" style="max-width:56%">
+    <div class="eyebrow">01 / Pro</div>
+    <div class="h2">Not a bot.<br><span class="acc-p">A coordinated team.</span></div>
+    <p class="body" style="max-width:380px">Six specialized agents. One shared context. Your entire portfolio simultaneously managed — at 3am, when a whale moves, when your LP starts IL'ing.</p>
+    <div class="stats" style="margin-bottom:18px">
+      <div class="stat"><div class="sn">6+</div><div class="sl">Specialized Agents</div></div>
+      <div class="stat sg"><div class="sn" style="color:var(--g)">24/7</div><div class="sl">Always Active</div></div>
+      <div class="stat"><div class="sn">4</div><div class="sl">DeFi Terminals</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;max-width:360px">
+      <div class="card cp" style="padding:9px 13px"><div style="font-size:11px;font-weight:700;color:var(--p)">Portfolio Strategist — coordinates all agents</div></div>
+      <div class="card" style="padding:9px 13px;border-color:rgba(255,154,64,0.2)"><div style="font-size:11px;font-weight:700;color:var(--o)">Risk Manager — exposure limits, liquidation protection</div></div>
+      <div class="card cg" style="padding:9px 13px"><div style="font-size:11px;font-weight:700;color:var(--g)">Market Scout — mempool signals, whale moves, LP</div></div>
+      <div class="card cb" style="padding:9px 13px"><div style="font-size:11px;font-weight:700;color:var(--b)">Executors — Perps · LP · Yield · Sniper</div></div>
+    </div>
+  </div>
+  <div class="snum">06 / 14</div>
+</div>
+
+<!-- 7 ARENA -->
+<div class="slide" id="slide-7">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 80% at 60% 50%,rgba(255,100,0,0.1) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#1A0A04)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(255,100,50,0.1);left:-2%;top:50%;transform:translateY(-50%)">ARENA</div>
+  <img class="slide-char fighter" src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtZmlnaHRlci12NS1zaGllbGQtY3V0b3V0LnBuZw==" alt="" style="height:86%;right:-1%">
+  <div class="slide-content" style="max-width:56%">
+    <div class="eyebrow orange">02 / Arena</div>
+    <div class="h2">Proven on-chain.<br><span class="acc-o">Not claimed.</span></div>
+    <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:0.18em;color:var(--o);text-transform:uppercase;margin-bottom:8px">Match Formats</div>
+    <div class="card co" style="padding:12px 14px;margin-bottom:14px;max-width:360px">
+      <div class="list">
+        <div class="li"><div class="dot doto"></div><strong style="color:#fff">1v1 Duel</strong> — same capital, same window, on-chain P&L</div>
+        <div class="li"><div class="dot doto"></div><strong style="color:#fff">Tournament</strong> — 8–64 agents, bracket format</div>
+        <div class="li"><div class="dot doto"></div><strong style="color:#fff">Gauntlet</strong> — survive as long as possible</div>
+      </div>
+    </div>
+    <div class="stats" style="margin-bottom:14px">
+      <div class="stat so"><div class="sn" style="color:var(--o)">100%</div><div class="sl">On-Chain Settlement</div></div>
+      <div class="stat so"><div class="sn" style="color:var(--o)">0</div><div class="sl">Admin Keys</div></div>
+    </div>
+    <div class="callout" style="max-width:360px">
+      <div class="cl">On-Chain Programs</div>
+      <div class="ctext">Agent Registry · Performance Oracle · Non-custodial Escrow. Every result verifiable forever. Every result feeds the training flywheel.</div>
+    </div>
+  </div>
+  <div class="snum">07 / 14</div>
+</div>
+
+<!-- 8 CREATOR ECONOMY -->
+<div class="slide" id="slide-8">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(20,241,149,0.1) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#041A10)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(20,241,149,0.1);right:-3%;top:50%;transform:translateY(-50%)">CREATOR</div>
+  <img class="slide-char scout" src="/api/library?action=raw&id=ZGVzaWduL2ltYWdlcy9kZ2VudHMtc2NvdXQtdjgtY3V0b3V0LnBuZw==" alt="" style="height:80%;opacity:0.9">
+  <div class="slide-content" style="max-width:58%">
+    <div class="eyebrow green">03 / Marketplace</div>
+    <div class="h2">Arena record =<br><span class="acc-g">revenue stream.</span></div>
+    <div class="cols3" style="max-width:560px">
+      <div class="card cg"><div class="cn">PATH 01</div><div class="ct ctg" style="font-size:15px">Sell Agents</div><div class="cb2">Monthly recurring. Arena track record is the only listing requirement — no backtests accepted.</div><div class="chips"><span class="chip chipg" style="font-size:8px">Recurring</span></div></div>
+      <div class="card cg"><div class="cn">PATH 02</div><div class="ct ctg" style="font-size:15px">Sell Strategies</div><div class="cb2">Natural language configs. Verified performance only. Performance is the marketing.</div><div class="chips"><span class="chip chipg" style="font-size:8px">Volume Play</span></div></div>
+      <div class="card cg"><div class="cn">PATH 03</div><div class="ct ctg" style="font-size:15px">Open a Vault</div><div class="cb2">Let allocators fund your agent. Earn performance fees. Non-custodial. On-chain settlement.</div><div class="chips"><span class="chip chipg" style="font-size:8px">Prop Trading</span></div></div>
+    </div>
+  </div>
+  <div class="snum">08 / 14</div>
+</div>
+
+<!-- 9 MARKET -->
+<div class="slide" id="slide-9">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 90% 70% at 50% 50%,rgba(0,194,255,0.07) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#04101A)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(0,194,255,0.1);left:50%;top:50%;transform:translate(-50%,-50%)">MARKET</div>
+  <div class="slide-content" style="max-width:960px;margin:0 auto">
+    <div class="eyebrow blue" style="margin:0 auto 14px;display:inline-flex">The Opportunity</div>
+    <div class="h2" style="margin-bottom:18px">The timing is right.<br><span class="acc-p">The market is here.</span></div>
+    <div class="cols3" style="margin-bottom:16px">
+      <div class="card cb"><div class="sn" style="font-family:'Orbitron',monospace;font-size:34px;font-weight:900;color:var(--b);margin-bottom:6px">$9.2B</div><div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--b);letter-spacing:0.12em;margin-bottom:5px">SOLANA DEFI TVL</div><div style="font-size:12px;color:var(--dim)">March 2026 all-time high. The capital is already on-chain and active.</div></div>
+      <div class="card cp"><div class="sn" style="font-family:'Orbitron',monospace;font-size:34px;font-weight:900;color:var(--p);margin-bottom:6px">$770B</div><div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--p);letter-spacing:0.12em;margin-bottom:5px">DEFI MARKET 2031</div><div style="font-size:12px;color:var(--dim)">$238B today. 26% CAGR. Agentic infra layer is structurally absent today.</div></div>
+      <div class="card cg"><div class="sn" style="font-family:'Orbitron',monospace;font-size:34px;font-weight:900;color:var(--g);margin-bottom:6px">21K+</div><div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--g);letter-spacing:0.12em;margin-bottom:5px">AI AGENTS — LAST HACKATHON</div><div style="font-size:12px;color:var(--dim)">Every one trained on generic data. dgents is the infrastructure layer they all need.</div></div>
+    </div>
+    <div class="cols2" style="max-width:700px;margin:0 auto">
+      <div class="callout cg2">
+        <div class="cl">SAM — Solana Active Traders</div>
+        <div class="ctext">~500K active Solana wallets trading DeFi monthly. At $75–200/mo per Pro subscriber, the immediate addressable market is $450M–$1.2B ARR.</div>
+      </div>
+      <div class="callout" style="background:rgba(0,194,255,0.04);border-color:rgba(0,194,255,0.2)">
+        <div class="cl" style="color:var(--b)">Category Validation</div>
+        <div class="ctext">Almanak raised $8.45M (Delphi Labs) for EVM AI agents with no Arena, no data loop, no Solana. The category is being funded. We're the Solana-native, data-first version.</div>
+      </div>
+    </div>
+  </div>
+  <div class="snum">09 / 14</div>
+</div>
+
+<!-- 10 COMPETITIVE -->
+<div class="slide" id="slide-10">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(153,69,255,0.1) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#150828)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(153,69,255,0.1);left:50%;top:50%;transform:translate(-50%,-50%)">MOAT</div>
+  <div class="slide-content">
+    <div class="eyebrow">Competitive Position</div>
+    <div class="h2" style="margin-bottom:12px">The question every competitor<br><span class="acc-p">fails to answer.</span></div>
+    <div class="qblock" style="margin-bottom:16px;max-width:580px;padding:12px 18px">
+      <div class="qt" style="font-size:clamp(12px,1.5vw,17px);color:var(--dim);font-style:italic">"Why use your platform instead of asking ChatGPT to build me a bot?"</div>
+    </div>
+    <table class="table">
+      <thead><tr><th>Capability</th><th>dgents.ai</th><th>Almanak (EVM)</th><th>Cod3x</th><th>Generic Bots</th><th>Telegram Bots</th></tr></thead>
+      <tbody>
+        <tr class="hl2"><td>Multi-agent coordination</td><td><span class="chk">&#10003;</span></td><td><span class="dsh">Partial</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td></tr>
+        <tr><td>Solana-native</td><td><span class="chk">&#10003;</span></td><td><span class="dsh">—</span></td><td><span class="dsh">Partial</span></td><td><span class="dsh">Varies</span></td><td><span class="dsh">—</span></td></tr>
+        <tr class="hl2"><td>Arena + on-chain proof</td><td><span class="chk">&#10003;</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td></tr>
+        <tr><td>Live training data flywheel</td><td><span class="chk">&#10003;</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td></tr>
+        <tr class="hl2"><td>Creator economy + vaults</td><td><span class="chk">&#10003;</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td><td><span class="dsh">—</span></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:10px;color:rgba(255,255,255,0.18);margin-top:8px">Almanak ($8.45M, Delphi Labs) validates the category. EVM-only. No Arena. No data loop. No Solana. We are the version they can't build.</div>
+  </div>
+  <div class="snum">10 / 14</div>
+</div>
+
+<!-- 11 BUSINESS MODEL -->
+<div class="slide" id="slide-11">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 70% 80% at 30% 50%,rgba(255,209,102,0.06) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#1A1004)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(255,209,102,0.1);right:-3%;top:50%;transform:translateY(-50%)">REVENUE</div>
+  <div class="slide-content">
+    <div class="eyebrow gold">Business Model</div>
+    <div class="h2" style="margin-bottom:18px">Four streams.<br><span class="acc-o">All reinforcing.</span></div>
+    <div class="revrows">
+      <div class="revrow" style="background:rgba(153,69,255,0.06);border-color:rgba(153,69,255,0.2)"><div class="rname">Subscriptions</div><div class="rmodel">$75/mo MiniMax · $200/mo MaxMode — recurring, predictable base</div><div class="rtype rsub">Recurring</div></div>
+      <div class="revrow"><div class="rname">Arena Entry Fees</div><div class="rmodel">Platform cut per match — revenue and training data simultaneously</div><div class="rtype rtx">Per Transaction</div></div>
+      <div class="revrow"><div class="rname">Creator Economy</div><div class="rmodel">% take on all agent and strategy Marketplace transactions</div><div class="rtype rtake">Take Rate</div></div>
+      <div class="revrow"><div class="rname">Vault Fees</div><div class="rmodel">% of returns on capital managed by top Arena agents</div><div class="rtype rperf">Performance</div></div>
+    </div>
+    <div class="cols2" style="max-width:640px">
+      <div class="callout cg2">
+        <div class="cl">Zero CAC Discovery</div>
+        <div class="ctext">Free tier spectates Arena + browses Marketplace. Organic top-of-funnel built into the product — no paid acquisition needed to fill it.</div>
+      </div>
+      <div class="callout cgold2">
+        <div class="cl">Unit Economics (Target Year 2)</div>
+        <div class="ctext">500 Pro subs at $150 avg = $900K ARR. Arena + Marketplace take = additive. Path to $5M ARR before Series A.</div>
+      </div>
+    </div>
+  </div>
+  <div class="snum">11 / 14</div>
+</div>
+
+<!-- 12 TRACTION -->
+<div class="slide" id="slide-12">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(153,69,255,0.09) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#150828)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(153,69,255,0.1);left:50%;top:50%;transform:translate(-50%,-50%)">BUILT</div>
+  <div class="slide-content">
+    <div class="eyebrow">Traction &amp; Proof</div>
+    <div class="h2" style="margin-bottom:22px">Proof of execution,<br><span class="acc-p">not projections.</span></div>
+    <div class="trax" style="max-width:820px">
+      <div class="traxcard tp">
+        <div class="traxlabel lp">Arena Settlement</div>
+        <div class="traxhead">DegenDome — Won Colosseum AI Hackathon</div>
+        <div class="traxbody">Tayler's prior build: non-custodial PvP on-chain settlement built from scratch. Won 1st place, Feb 2026. Arena is not a concept — it's his second iteration on proven infrastructure.</div>
+      </div>
+      <div class="traxcard tg">
+        <div class="traxlabel lg">Production Codebase</div>
+        <div class="traxhead">Multi-agent system in production today</div>
+        <div class="traxbody">dgents runs on Froggo Mission Control — a live multi-agent orchestration platform already in production. We're repurposing running infrastructure, not building from zero.</div>
+      </div>
+      <div class="traxcard to">
+        <div class="traxlabel lo">Infrastructure Partner</div>
+        <div class="traxhead">Carbium.io — Solana-native RPC + DAS API</div>
+        <div class="traxbody">Partnership confirmed. Carbium provides Solana RPC, DAS API, and Arena settlement programs. Strategic Anatoli Yakovenko connection. Spider token. Not a vendor — a co-builder.</div>
+      </div>
+      <div class="traxcard tb">
+        <div class="traxlabel lb">Shipping Now</div>
+        <div class="traxhead">Pro Terminal + Arena — actively in development</div>
+        <div class="traxbody">Built on a live multi-agent production platform — not a prototype, a running system being repurposed for DeFi. Full-stack team shipping weekly. Colosseum Frontier 2026 competitor. Building in public.</div>
+      </div>
+    </div>
+  </div>
+  <div class="snum">12 / 14</div>
+</div>
+
+<!-- 13 TEAM -->
+<div class="slide" id="slide-13">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(153,69,255,0.1) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#150828)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(153,69,255,0.1);left:50%;top:50%;transform:translate(-50%,-50%)">TEAM</div>
+  <div class="slide-content">
+    <div class="eyebrow" style="margin-bottom:8px">The Team</div>
+    <div class="h2" style="margin-bottom:6px">Why us. Why now.<br><span class="acc-p">Why this market.</span></div>
+    <div class="cols3" style="margin-bottom:14px">
+      <div class="tc">
+        <div class="av avk">K</div>
+        <div class="fname">Kevin MacArthur</div>
+        <div class="frole rp">Co-Founder · Growth &amp; Strategy</div>
+        <div class="fbio">Part of the CoinMarketCap AI founding team — watched the training data gap form from inside the platform 95M+ traders use to make decisions. Head of Onchain Growth at Bitso. Advising Carbium.io and Safirum.ag on Solana go-to-market. He's the operator who knows this market from the data layer and the distribution layer simultaneously.</div>
+      </div>
+      <div class="tc">
+        <div class="av avt">T</div>
+        <div class="fname">Tayler Melvin</div>
+        <div class="frole rg">Co-Founder · Engineering</div>
+        <div class="fbio">Won the Colosseum AI Agent Hackathon, February 2026, with DegenDome — Arena's direct predecessor. Spent six months building non-custodial PvP on-chain settlement before dgents existed. Arena is his second build on this exact problem, not his first. Onchain Marketing Lead at Bitso.</div>
+      </div>
+      <div class="tc">
+        <div class="av avc">C</div>
+        <div class="fname">Carbium</div>
+        <div class="frole ro">Infrastructure Partner</div>
+        <div class="fbio">Solana-native RPC, DAS API, smart contracts, Arena settlement. Strategic Anatoli Yakovenko (Solana Labs founder) connection. Spider token ecosystem. Not a vendor — co-building the settlement and data layer alongside us.</div>
+      </div>
+    </div>
+    <div style="padding:11px 16px;background:rgba(20,241,149,0.04);border:1px solid rgba(20,241,149,0.14);display:flex;align-items:center;gap:14px;max-width:820px">
+      <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--g);letter-spacing:0.15em;flex-shrink:0">WHY THIS TEAM</div>
+      <div style="font-size:12px;color:var(--dim)">One founder watched this gap form from inside the layer that 95M traders rely on. One already built and won with the core infrastructure. Neither of them is pitching this cold.</div>
+    </div>
+  </div>
+  <div class="snum">13 / 14</div>
+</div>
+
+<!-- 14 WHAT WE'RE BUILDING -->
+<div class="slide" id="slide-14">
+  <div class="slide-bg" style="background:radial-gradient(ellipse 80% 100% at 70% 60%,rgba(120,40,230,0.55) 0%,transparent 55%),radial-gradient(ellipse 60% 80% at 20% 80%,rgba(20,241,149,0.08) 0%,transparent 55%),linear-gradient(160deg,#0A0414,#150828 50%,#0A0414)"></div>
+  <div class="ghost" style="-webkit-text-stroke:1px rgba(20,241,149,0.08);left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(60px,12vw,160px)">AGENTIC</div>
+  <div class="slide-content" style="max-width:860px;margin:0 auto">
+    <div class="eyebrow green" style="margin:0 0 16px">Where We're Going</div>
+    <div class="h2" style="margin-bottom:22px">Six months.<br><span class="acc-g">Three phases. One mission.</span></div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:20px">
+      <div class="milestone">
+        <div class="mperiod">Phase 01 · Month 1–2 — Foundation</div>
+        <div class="mitems"><span class="mitem"><strong>Pro terminal</strong> live on mainnet</span><span class="mitem"><strong>Arena 1v1</strong> first match on-chain</span><span class="mitem"><strong>All 4 DeFi terminals</strong> in beta</span><span class="mitem"><strong>500 beta traders</strong> onboarded</span></div>
+      </div>
+      <div class="milestone mg">
+        <div class="mperiod">Phase 02 · Month 3–4 — Platform</div>
+        <div class="mitems"><span class="mitem"><strong>Creator Marketplace</strong> live</span><span class="mitem"><strong>Vault layer</strong> launched</span><span class="mitem"><strong>Public Arena tournaments</strong></span><span class="mitem"><strong>2,000+ active traders</strong></span></div>
+      </div>
+      <div class="milestone mb">
+        <div class="mperiod">Phase 03 · Month 5–6 — Scale</div>
+        <div class="mitems"><span class="mitem"><strong>Institutional vault access</strong></span><span class="mitem"><strong>Module SDK</strong> for protocols</span><span class="mitem"><strong>Social layer</strong> + leaderboards</span><span class="mitem"><strong>Cross-chain expansion</strong></span></div>
+      </div>
+    </div>
+    <div class="callout cg2" style="max-width:700px;margin-bottom:20px">
+      <div class="cl">The Compounding Advantage</div>
+      <div class="ctext">Every Arena match run is training data captured. Every trader onboarded adds signal. The platform's intelligence compounds from day one — and no competitor can buy their way in.</div>
+    </div>
+    <div style="font-family:'Orbitron',monospace;font-size:10px;color:rgba(255,255,255,0.22);letter-spacing:0.12em;text-align:center">dgents.ai · @dgentsai · founders@dgents.ai</div>
+  </div>
+  <div class="snum">14 / 14</div>
+</div>
+
+</div>
+<script>
+const SLIDES=14,TITLES=['','The Problem','The Solution','Why Now','The Moat','Pro — Agent Team','Arena','Creator Economy','Market Opportunity','Competitive Position','Business Model','Traction','Team','Where We\'re Going'];
+let cur=1;
+function go(d){
+  const n=cur+d;if(n<1||n>SLIDES)return;
+  document.getElementById('slide-'+cur).classList.remove('active');
+  cur=n;
+  document.getElementById('slide-'+cur).classList.add('active');
+  document.getElementById('navCounter').textContent=(cur<10?'0':'')+cur+' / '+SLIDES;
+  document.getElementById('navTitle').textContent=TITLES[cur-1];
+  document.getElementById('btnPrev').disabled=cur===1;
+  document.getElementById('btnNext').disabled=cur===SLIDES;
+  document.getElementById('pbar').style.width=(cur/SLIDES*100)+'%';
+}
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();go(1)}
+  if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(-1)}
+});
+document.getElementById('btnPrev').disabled=true;
+document.getElementById('pbar').style.width=(1/SLIDES*100)+'%';
+</script>
+</body>
+</html>
